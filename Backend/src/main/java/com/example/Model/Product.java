@@ -2,36 +2,58 @@ package com.example.Model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
+@Deprecated
 @Entity
 @Table(name = "products")
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "seller_id", nullable = true)
+    private User seller; // Farmer who listed the product
+
     private String productName;
-    private String modelName;
-    private String company;
-    private int year;
     private String description;
+    private String category; // Tractor, Plough, Harvester, etc.
+    private String condition; // New, Used, Refurbished
+    private Double price;
+    private Integer quantity;
     private String location;
-    private double price;
-    private String ownerName;
-    private String category;
+    private String contactPhone;
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private LocalDate availabilityStart;
+    @Enumerated(EnumType.STRING)
+    private ApprovalStatus approvalStatus = ApprovalStatus.PENDING; // PENDING, APPROVED, REJECTED
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private LocalDate availabilityEnd;
+    private String rejectionReason;
 
-    private String imagePath;
-    @Transient
-    private MultipartFile image;
+    @ManyToOne
+    @JoinColumn(name = "approved_by_admin")
+    private User approvedByAdmin;
+
+    private LocalDateTime approvedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+
+    public enum ApprovalStatus {
+        PENDING,    // Waiting for admin approval
+        APPROVED,   // Approved and visible to buyers
+        REJECTED    // Rejected by admin
+    }
 }

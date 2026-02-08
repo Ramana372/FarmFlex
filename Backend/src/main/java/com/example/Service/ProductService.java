@@ -1,65 +1,178 @@
 package com.example.Service;
 
 import com.example.Model.Product;
-import com.example.Repo.ProductRepo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
+import com.example.Model.User;
+import com.example.Repo.ProductRepository;
+import com.example.Repo.UserRepo;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-@Service
+@Deprecated
+@Slf4j
+@RequiredArgsConstructor
 public class ProductService {
 
-    @Autowired
-    private ProductRepo productrepo;
+    private final ProductRepository productRepository;
+    private final UserRepo userRepository;
 
-    public Product addProduct(Product product) {
-        try {
-            MultipartFile file = product.getImage();
+    /**
+     * Farmer creates a new product listing (requires admin approval)
+     */
+    public Product createProduct(Long farmerId, String productName, String description, 
+                                  String category, String condition, Double price, 
+                                  Integer quantity, String location, String contactPhone) {
+        User farmer = userRepository.findById(farmerId)
+                .orElseThrow(() -> new IllegalArgumentException("Farmer not found"));
 
-            if (file != null && !file.isEmpty()) {
-                Path uploadDir = Paths.get("Uploads");
-                if (!Files.exists(uploadDir)) {
-                    Files.createDirectories(uploadDir);
-                }
-
-                String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-                Path filePath = uploadDir.resolve(fileName);
-                Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-                product.setImagePath("Uploads/" + fileName);
-            }
-
-            return productrepo.save(product);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+        if (!farmer.getRole().equals(User.UserRole.FARMER)) {
+            throw new IllegalArgumentException("Only farmers can create products");
         }
+
+        Product product = new Product();
+        product.setSeller(farmer);
+        product.setProductName(productName);
+        product.setDescription(description);
+        product.setCategory(category);
+        product.setCondition(condition);
+        product.setPrice(price);
+        product.setQuantity(quantity);
+        product.setLocation(location);
+        product.setContactPhone(contactPhone);
+        product.setApprovalStatus(Product.ApprovalStatus.PENDING);
+
+        Product savedProduct = productRepository.save(product);
+        log.info("Product created by farmer {}: {}", farmerId, savedProduct.getId());
+
+        return savedProduct;
     }
 
-
-    public List<Product> getAllProducts() {
-        return productrepo.findAll();
+    /**
+     * Get all approved products (visible to buyers)
+     */
+    public List<Product> getApprovedProducts() {
+        return productRepository.findByApprovalStatus(Product.ApprovalStatus.APPROVED);
     }
 
-    public List<Product> getProductsByOwnerName(String name) {
-        return productrepo.findByOwnerName(name);
+    /**
+     * Get products by category
+     */
+    public List<Product> getProductsByCategory(String category) {
+        return productRepository.findByCategory(category);
     }
 
-    public List<Product> getByCategory(String category) {
-        return productrepo.findByCategoryIgnoreCase(category);
+    /**
+     * Get specific approved product
+     */
+    public Optional<Product> getProductById(Long id) {
+        return productRepository.findByIdAndApprovalStatus(id, Product.ApprovalStatus.APPROVED);
     }
 
-    public Product getProductById(Long id) {
-        Optional<Product> productOptional = productrepo.findById(id);
-        return productOptional.orElse(null);
+    /**
+     * Farmer views their own products
+     */
+    public List<Product> getMyProducts(Long farmerId) {
+        User farmer = userRepository.findById(farmerId)
+                .orElseThrow(() -> new IllegalArgumentException("Farmer not found"));
+        return productRepository.findBySeller(farmer);
+    }
+
+    /**
+     * Get pending products for admin approval
+     */
+    public List<Product> getPendingApprovals() {
+        return productRepository.findByApprovalStatus(Product.ApprovalStatus.PENDING);
+    }
+
+    /**
+     * Admin approves a product
+     */
+    public Product approveProduct(Long productId, Long adminId) {
+        User admin = userRepository.findById(adminId)
+                .orElseThrow(() -> new IllegalArgumentException("Admin not found"));
+
+        if (!admin.getRole().equals(User.UserRole.ADMIN)) {
+            throw new IllegalArgumentException("Only admins can approve products");
+        }
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+
+        product.setApprovalStatus(Product.ApprovalStatus.APPROVED);
+        product.setApprovedByAdmin(admin);
+        product.setApprovedAt(LocalDateTime.now());
+
+        Product savedProduct = productRepository.save(product);
+        log.info("Product {} approved by admin {}", productId, adminId);
+
+        return savedProduct;
+    }
+
+    /**
+     * Admin rejects a product
+     */
+    public Product rejectProduct(Long productId, Long adminId, String rejectionReason) {
+        User admin = userRepository.findById(adminId)
+                .orElseThrow(() -> new IllegalArgumentException("Admin not found"));
+
+        if (!admin.getRole().equals(User.UserRole.ADMIN)) {
+            throw new IllegalArgumentException("Only admins can reject products");
+        }
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+
+        product.setApprovalStatus(Product.ApprovalStatus.REJECTED);
+        product.setRejectionReason(rejectionReason);
+        product.setApprovedByAdmin(admin);
+        product.setApprovedAt(LocalDateTime.now());
+
+        Product savedProduct = productRepository.save(product);
+        log.info("Product {} rejected by admin {}", productId, adminId);
+
+        return savedProduct;
+    }
+
+    /**
+     * Update product listing
+     */
+    public Product updateProduct(Long productId, Long farmerId, String productName, 
+                                 String description, Double price, Integer quantity) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+
+        if (!product.getSeller().getId().equals(farmerId)) {
+            throw new IllegalArgumentException("You can only edit your own products");
+        }
+
+        product.setProductName(productName);
+        product.setDescription(description);
+        product.setPrice(price);
+        product.setQuantity(quantity);
+
+        // Reset to pending if modified
+        if (!product.getApprovalStatus().equals(Product.ApprovalStatus.PENDING)) {
+            product.setApprovalStatus(Product.ApprovalStatus.PENDING);
+        }
+
+        return productRepository.save(product);
+    }
+
+    /**
+     * Delete product
+     */
+    public void deleteProduct(Long productId, Long farmerId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+
+        if (!product.getSeller().getId().equals(farmerId)) {
+            throw new IllegalArgumentException("You can only delete your own products");
+        }
+
+        productRepository.delete(product);
+        log.info("Product {} deleted by farmer {}", productId, farmerId);
     }
 }

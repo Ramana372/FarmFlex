@@ -2,76 +2,302 @@ package com.example.Controller;
 
 import com.example.Model.User;
 import com.example.Repo.UserRepo;
-import com.example.Service.UserService;
-import com.example.Security.JwtUtil;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.Security.JwtTokenProvider;
+import com.example.Service.EmailService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
+/**
+ * AuthController - Handles user registration, login, and email verification
+ */
 @RestController
-@RequestMapping("/auth")
-@CrossOrigin(origins = "http://localhost:63342")
+@RequestMapping("/api/auth")
+@RequiredArgsConstructor
+@Slf4j
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
 public class AuthController {
 
-    @Autowired
-    private UserService userService;
+    private final UserRepo userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final EmailService emailService;
 
-    @Autowired
-    private UserRepo userRepo;
-
-    @Autowired
-    private JwtUtil jwtUtil;
-
-    @Autowired
-    private UserDetailsService userDetailsService;
-
+    /**
+     * Register new user (Farmer or Admin)
+     */
     @PostMapping("/register")
-    public ResponseEntity<String> registerSubmit(@RequestBody User user) {
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
         try {
-            userService.register(user);
-            return ResponseEntity.ok("Registered Successfully!");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            // Check if user already exists
+            if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Email already registered"));
+            }
+
+            // Create new user
+            User user = new User();
+            user.setName(request.getName());
+            user.setEmail(request.getEmail());
+            user.setPhone(request.getPhone());
+            user.setLocation(request.getLocation());
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+            User.UserRole role;
+            try {
+                role = request.getRole() == null || request.getRole().isBlank()
+                        ? User.UserRole.FARMER
+                        : User.UserRole.valueOf(request.getRole().toUpperCase());
+            } catch (IllegalArgumentException ex) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Invalid role"));
+            }
+            user.setRole(role); // FARMER or ADMIN
+            user.setEmailVerified(true); // Auto-verify email - no verification needed
+            user.setCreatedAt(LocalDateTime.now());
+            user.setUpdatedAt(LocalDateTime.now());
+
+            User savedUser = userRepository.save(user);
+            log.info("New user registered: {} with email: {}", user.getName(), user.getEmail());
+
+            // Generate JWT token for immediate login
+            String token = jwtTokenProvider.generateToken(
+                    savedUser.getId().toString(),
+                    savedUser.getEmail(),
+                    savedUser.getRole().toString()
+            );
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Registration successful! You can now login.");
+            response.put("token", token);
+            response.put("userId", savedUser.getId());
+            response.put("name", savedUser.getName());
+            response.put("email", savedUser.getEmail());
+            response.put("role", savedUser.getRole().toString());
+            response.put("phone", savedUser.getPhone());
+            response.put("location", savedUser.getLocation());
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (Exception e) {
+            log.error("Registration error: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Registration failed: " + e.getMessage()));
         }
     }
 
+    /**
+     * Login user and return JWT token
+     */
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody(required = true) Map<String, String> loginRequest) {
-        String email = loginRequest.get("email").toLowerCase();
-        String password = loginRequest.get("password");
-
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         try {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-            userService.authenticate(email, password);
-            String jwt = jwtUtil.generateToken(userDetails);
-            return ResponseEntity.ok(Map.of("token", jwt));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(401).body(Map.of("error", e.getMessage()));
+            // Find user by email
+            Optional<User> userOpt = userRepository.findByEmail(request.getEmail());
+            if (userOpt.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("error", "Invalid email or password"));
+            }
+
+            User user = userOpt.get();
+
+            // Verify password
+            if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("error", "Invalid email or password"));
+            }
+
+            // Generate JWT token
+            String token = jwtTokenProvider.generateToken(
+                    user.getId().toString(),
+                    user.getEmail(),
+                    user.getRole().toString()
+            );
+
+            log.info("User logged in: {} ({})", user.getName(), user.getRole());
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("token", token);
+            response.put("userId", user.getId());
+            response.put("name", user.getName());
+            response.put("email", user.getEmail());
+            response.put("role", user.getRole().toString());
+            response.put("phone", user.getPhone());
+            response.put("location", user.getLocation());
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("Login error: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Login failed"));
         }
-    }
-    @GetMapping("/getToken")
-    public String getToken(@RequestHeader("Authorization") String token) {
-        if (token != null && token.startsWith("Bearer ")) {
-            return token.substring(7);
-        }
-        return null;
     }
 
-    @GetMapping("/admin/farmers")
-    public List<User> getAllFarmers() {
-        return userRepo.findByRole("FARMER");
+    /**
+     * Verify email using token
+     */
+    @GetMapping("/verify-email")
+    public ResponseEntity<?> verifyEmail(@RequestParam String token) {
+        try {
+            Optional<User> userOpt = userRepository.findByEmailVerificationToken(token);
+
+            if (userOpt.isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Invalid verification token"));
+            }
+
+            User user = userOpt.get();
+
+            // Check if token is expired
+            if (user.getEmailVerificationTokenExpiry().isBefore(LocalDateTime.now())) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Verification token has expired"));
+            }
+
+            // Mark email as verified
+            user.setEmailVerified(true);
+            user.setEmailVerificationToken(null);
+            user.setEmailVerificationTokenExpiry(null);
+            userRepository.save(user);
+
+            log.info("Email verified for user: {}", user.getName());
+
+            // Send welcome email
+            try {
+                emailService.sendWelcomeEmail(user.getEmail(), user.getName(), user.getRole().toString());
+            } catch (Exception e) {
+                log.error("Failed to send welcome email", e);
+            }
+
+            return ResponseEntity.ok(Map.of("message", "Email verified successfully. You can now log in."));
+        } catch (Exception e) {
+            log.error("Email verification error: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Email verification failed"));
+        }
     }
 
-    @GetMapping("/logout")
-    public ResponseEntity<?> logout(@RequestHeader("Authorization") String token) {
-        if (token != null && token.startsWith("Bearer ")) {
-            return ResponseEntity.ok("Logged out successfully!");
+    /**
+     * Resend verification email
+     */
+    @PostMapping("/resend-verification")
+    public ResponseEntity<?> resendVerification(@RequestBody ResendVerificationRequest request) {
+        try {
+            Optional<User> userOpt = userRepository.findByEmail(request.getEmail());
+
+            if (userOpt.isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("error", "User not found"));
+            }
+
+            User user = userOpt.get();
+
+            if (user.getEmailVerified()) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Email already verified"));
+            }
+
+            // Generate new verification token
+            String verificationToken = UUID.randomUUID().toString();
+            user.setEmailVerificationToken(verificationToken);
+            user.setEmailVerificationTokenExpiry(LocalDateTime.now().plusHours(24));
+            userRepository.save(user);
+
+            // Send verification email
+            emailService.sendVerificationEmail(user.getEmail(), user.getName(), verificationToken);
+
+            log.info("Verification email resent to: {}", user.getEmail());
+
+            return ResponseEntity.ok(Map.of("message", "Verification email sent successfully"));
+        } catch (Exception e) {
+            log.error("Resend verification error: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to resend verification email"));
         }
-        return ResponseEntity.badRequest().body("Invalid token!");
+    }
+
+    /**
+     * Forgot password - send reset link
+     */
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest request) {
+        try {
+            Optional<User> userOpt = userRepository.findByEmail(request.getEmail());
+
+            if (userOpt.isEmpty()) {
+                // Don't reveal if email exists or not (security best practice)
+                return ResponseEntity.ok(Map.of("message", "If email exists, password reset link has been sent"));
+            }
+
+            User user = userOpt.get();
+            String resetToken = jwtTokenProvider.generatePasswordResetToken(user.getId().toString());
+
+            // In a real application, you would store this token in the database
+            // For now, we'll send it via email and validate it based on JWT signature
+            emailService.sendPasswordResetEmail(user.getEmail(), user.getName(), resetToken);
+
+            log.info("Password reset email sent to: {}", user.getEmail());
+
+            return ResponseEntity.ok(Map.of("message", "If email exists, password reset link has been sent"));
+        } catch (Exception e) {
+            log.error("Forgot password error: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Password reset failed"));
+        }
+    }
+
+    // DTO Classes
+    public static class RegisterRequest {
+        @NotBlank
+        @Size(min = 2, max = 120)
+        public String name;
+
+        @NotBlank
+        @Email
+        public String email;
+
+        @NotBlank
+        @Size(min = 6, max = 120)
+        public String password;
+
+        @NotBlank
+        public String phone;
+
+        @NotBlank
+        public String location;
+
+        public String role; // FARMER or ADMIN
+
+        public String getName() { return name; }
+        public String getEmail() { return email; }
+        public String getPassword() { return password; }
+        public String getPhone() { return phone; }
+        public String getLocation() { return location; }
+        public String getRole() { return role; }
+    }
+
+    public static class LoginRequest {
+        public String email;
+        public String password;
+
+        public String getEmail() { return email; }
+        public String getPassword() { return password; }
+    }
+
+    public static class ResendVerificationRequest {
+        public String email;
+
+        public String getEmail() { return email; }
+    }
+
+    public static class ForgotPasswordRequest {
+        public String email;
+
+        public String getEmail() { return email; }
     }
 }

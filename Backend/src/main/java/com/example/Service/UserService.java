@@ -1,11 +1,12 @@
 package com.example.Service;
 
 import com.example.Model.User;
-import com.example.Model.Role;
 import com.example.Repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -18,7 +19,8 @@ public class UserService {
 
     public User register(User user) {
         String normalizedEmail = user.getEmail().toLowerCase();
-        if (userRepo.findByEmail(normalizedEmail) != null) {
+        Optional<User> existingUser = userRepo.findByEmail(normalizedEmail);
+        if (existingUser.isPresent()) {
             throw new IllegalArgumentException("Email already exists");
         }
 
@@ -31,19 +33,20 @@ public class UserService {
         user.setPassword(encodedPassword);
 
         if (user.getRole() == null) {
-            user.setRole(Role.FARMER);
+            user.setRole(User.UserRole.FARMER);
         }
 
         return userRepo.save(user);
     }
 
     public User authenticate(String email, String rawPassword) {
-        User user = userRepo.findByEmail(email.toLowerCase());
+        Optional<User> userOpt = userRepo.findByEmail(email.toLowerCase());
 
-        if (user == null) {
+        if (userOpt.isEmpty()) {
             throw new IllegalArgumentException("No user found with this email");
         }
 
+        User user = userOpt.get();
         System.out.println("Raw password: " + rawPassword);
         System.out.println("Encoded password from DB: " + user.getPassword());
 
