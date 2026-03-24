@@ -1,14 +1,19 @@
 package com.example.Service;
 
+import com.example.Exception.EmailSendingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * EmailService - Handles email sending for verification and notifications
+ * Supports asynchronous email operations to prevent blocking main application flow
  */
 @Service
 @Slf4j
@@ -17,11 +22,14 @@ public class EmailService {
 
     private final JavaMailSender mailSender;
 
-    @Value("${spring.mail.from:noreply@agrimart.com}")
+    @Value("${spring.mail.from:noreply@farmflex.com}")
     private String fromEmail;
 
     @Value("${app.frontend.url:http://localhost:3000}")
     private String frontendUrl;
+
+    private static final DateTimeFormatter DATE_FORMATTER = 
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     /**
      * Send email verification link
@@ -213,6 +221,139 @@ public class EmailService {
             log.info("Listing status email sent to: {}", toEmail);
         } catch (Exception e) {
             log.error("Failed to send listing status email to: {}", toEmail, e);
+        }
+    }
+
+    /**
+     * Send login notification email asynchronously
+     * Called after successful authentication to notify user of login activity
+     * This method runs asynchronously and should NOT block the login response
+     * 
+     * @param toEmail User's email address
+     * @param userName User's full name
+     * @param ipAddress User's IP address (optional)
+     * @param userAgent User's browser/device information (optional)
+     */
+    @Async("taskExecutor")
+    public void sendLoginNotificationEmail(String toEmail, String userName, String ipAddress, String userAgent) {
+        try {
+            if (toEmail == null || toEmail.trim().isEmpty()) {
+                log.warn("Cannot send login notification email: recipient email is empty");
+                return;
+            }
+
+            String loginTime = LocalDateTime.now().format(DATE_FORMATTER);
+            String ipInfo = (ipAddress != null && !ipAddress.equalsIgnoreCase("Unknown")) 
+                    ? "IP Address: " + ipAddress + "\n" 
+                    : "";
+            String deviceInfo = (userAgent != null && !userAgent.isEmpty()) 
+                    ? "Device: " + userAgent.substring(0, Math.min(100, userAgent.length())) + "\n" 
+                    : "";
+
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(fromEmail);
+            message.setTo(toEmail);
+            message.setSubject("Security Alert: New Login to Your FarmFlex Account");
+            message.setText("Hi " + userName + ",\n\n" +
+                    "Your FarmFlex account was just logged in.\n\n" +
+                    "LOGIN DETAILS:\n" +
+                    "Time: " + loginTime + "\n" +
+                    ipInfo +
+                    deviceInfo +
+                    "\n" +
+                    "SECURITY NOTE:\n" +
+                    "If this wasn't you, please change your password immediately and contact our support team.\n\n" +
+                    "Best practices for securing your account:\n" +
+                    "• Use a strong, unique password\n" +
+                    "• Enable two-factor authentication if available\n" +
+                    "• Log out from untrusted devices\n\n" +
+                    "Thank you for using FarmFlex - Flex Your Farm with Confidence!\n\n" +
+                    "Best regards,\n" +
+                    "FarmFlex Security Team");
+
+            mailSender.send(message);
+            log.info("Login notification email sent successfully to: {}", toEmail);
+        } catch (Exception e) {
+            // Log the error but don't throw - this is an async operation
+            // and should not break the login flow
+            log.error("Failed to send login notification email to: {}", toEmail, e);
+            // Optionally send alert to monitoring system here
+        }
+    }
+
+    /**
+     * Send suspicious login alert email
+     * Called when login is attempted from unusual location/device
+     * 
+     * @param toEmail User's email address
+     * @param userName User's full name
+     * @param ipAddress IP address of the login attempt
+     * @param reason Reason for suspicion
+     */
+    @Async("taskExecutor")
+    public void sendSuspiciousLoginAlert(String toEmail, String userName, String ipAddress, String reason) {
+        try {
+            if (toEmail == null || toEmail.trim().isEmpty()) {
+                log.warn("Cannot send suspicious login alert: recipient email is empty");
+                return;
+            }
+
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(fromEmail);
+            message.setTo(toEmail);
+            message.setSubject("⚠️ URGENT: Suspicious Login Activity Detected on Your Account");
+            message.setText("Hi " + userName + ",\n\n" +
+                    "We've detected suspicious login activity on your FarmFlex account.\n\n" +
+                    "DETAILS:\n" +
+                    "IP Address: " + ipAddress + "\n" +
+                    "Reason: " + reason + "\n" +
+                    "Time: " + LocalDateTime.now().format(DATE_FORMATTER) + "\n\n" +
+                    "ACTION REQUIRED:\n" +
+                    "If this was you, you can ignore this alert.\n" +
+                    "If this was not you, please:\n" +
+                    "1. Change your password immediately\n" +
+                    "2. Review your login history\n" +
+                    "3. Contact our support team if needed\n\n" +
+                    "Your account security is important to us.\n\n" +
+                    "Best regards,\n" +
+                    "FarmFlex Security Team");
+
+            mailSender.send(message);
+            log.warn("Suspicious login alert email sent to: {}", toEmail);
+        } catch (Exception e) {
+            log.error("Failed to send suspicious login alert email to: {}", toEmail, e);
+        }
+    }
+
+    /**
+     * Send password changed confirmation email
+     * 
+     * @param toEmail User's email address
+     * @param userName User's full name
+     */
+    @Async("taskExecutor")
+    public void sendPasswordChangedEmail(String toEmail, String userName) {
+        try {
+            if (toEmail == null || toEmail.trim().isEmpty()) {
+                log.warn("Cannot send password changed email: recipient email is empty");
+                return;
+            }
+
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(fromEmail);
+            message.setTo(toEmail);
+            message.setSubject("Password Changed - FarmFlex Account");
+            message.setText("Hi " + userName + ",\n\n" +
+                    "Your FarmFlex account password was successfully changed on " + 
+                    LocalDateTime.now().format(DATE_FORMATTER) + ".\n\n" +
+                    "If you did not perform this action, please contact our support team immediately.\n\n" +
+                    "Best regards,\n" +
+                    "FarmFlex Security Team");
+
+            mailSender.send(message);
+            log.info("Password changed confirmation email sent to: {}", toEmail);
+        } catch (Exception e) {
+            log.error("Failed to send password changed confirmation email to: {}", toEmail, e);
         }
     }
 }

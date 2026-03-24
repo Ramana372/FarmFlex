@@ -4,8 +4,10 @@ import com.example.Model.User;
 import com.example.Repo.UserRepo;
 import com.example.Security.JwtTokenProvider;
 import com.example.Service.EmailService;
+import com.example.Util.RequestUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -97,13 +99,15 @@ public class AuthController {
 
     /**
      * Login user and return JWT token
+     * Sends asynchronous login notification email on successful authentication
      */
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletRequest httpRequest) {
         try {
             // Find user by email
             Optional<User> userOpt = userRepository.findByEmail(request.getEmail());
             if (userOpt.isEmpty()) {
+                log.warn("Login attempt with non-existent email: {}", request.getEmail());
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body(Map.of("error", "Invalid email or password"));
             }
@@ -112,6 +116,7 @@ public class AuthController {
 
             // Verify password
             if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+                log.warn("Failed login attempt for user: {}", request.getEmail());
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body(Map.of("error", "Invalid email or password"));
             }
@@ -123,7 +128,25 @@ public class AuthController {
                     user.getRole().toString()
             );
 
-            log.info("User logged in: {} ({})", user.getName(), user.getRole());
+            log.info("User logged in successfully: {} ({})", user.getName(), user.getRole());
+
+            // Extract IP address and user agent for email notification
+            String clientIp = RequestUtil.getClientIpAddress(httpRequest);
+            String userAgent = RequestUtil.getUserAgent(httpRequest);
+
+            // Send login notification email asynchronously (non-blocking)
+            try {
+                emailService.sendLoginNotificationEmail(
+                        user.getEmail(),
+                        user.getName(),
+                        clientIp,
+                        userAgent
+                );
+                log.debug("Login notification email queued for: {}", user.getEmail());
+            } catch (Exception e) {
+                // Log the error but don't break the login flow
+                log.warn("Failed to queue login notification email for: {} - {}", user.getEmail(), e.getMessage());
+            }
 
             Map<String, Object> response = new HashMap<>();
             response.put("token", token);
@@ -136,7 +159,7 @@ public class AuthController {
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            log.error("Login error: {}", e.getMessage());
+            log.error("Login error: {}", e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Login failed"));
         }

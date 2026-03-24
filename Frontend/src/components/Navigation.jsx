@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 
 export default function Navigation() {
   const { user, logout } = useAuth();
+  const { getCartItemsCount } = useCart();
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const cartCount = getCartItemsCount();
 
   const handleLogout = () => {
     logout();
@@ -38,7 +41,7 @@ export default function Navigation() {
           
           {user && user.role === 'FARMER' && (
             <>
-              <Link to="/farmer/listings" className={`py-2 transition ${isActive('/farmer/listings')}`}>My Listings</Link>
+              {/* <Link to="/farmer/listings" className={`py-2 transition ${isActive('/farmer/listings')}`}>My Listings</Link> */}
               <Link to="/listings/create" className={`py-2 transition ${isActive('/listings/create')}`}>Add Equipment</Link>
             </>
           )}
@@ -49,6 +52,20 @@ export default function Navigation() {
               <Link to="/admin/listings/pending" className={`py-2 transition ${isActive('/admin/listings/pending')}`}>Approvals</Link>
             </>
           )}
+
+          {user && (
+            <>
+              <Link to="/my-orders" className={`py-2 transition ${isActive('/my-orders')}`}>My Orders</Link>
+              <Link to="/cart" className={`py-2 transition relative ${isActive('/cart')}`}>
+                🛒 Cart
+                {cartCount > 0 && (
+                  <span className="absolute -top-2 -right-3 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Right Side - Auth & User Menu */}
@@ -56,7 +73,7 @@ export default function Navigation() {
           {user ? (
             <div className="hidden md:flex items-center gap-3">
               <div className="px-4 py-2 bg-blue-50 rounded-lg">
-                <p className="text-sm font-semibold text-gray-900">{user.userName}</p>
+                <p className="text-sm font-semibold text-gray-900">{user.name}</p>
                 <p className="text-xs text-gray-500">{user.role}</p>
               </div>
               <Link 
@@ -89,6 +106,16 @@ export default function Navigation() {
             </div>
           )}
 
+          {/* Mobile Cart Button */}
+          {user && cartCount > 0 && (
+            <Link to="/cart" className="md:hidden relative p-2 text-gray-700 hover:bg-gray-100 rounded transition">
+              <span className="text-2xl">🛒</span>
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                {cartCount}
+              </span>
+            </Link>
+          )}
+
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -110,7 +137,7 @@ export default function Navigation() {
             
             {user && user.role === 'FARMER' && (
               <>
-                <Link to="/farmer/listings" className="block py-2 text-gray-700 hover:text-blue-600 font-medium">My Listings</Link>
+                {/* <Link to="/farmer/listings" className="block py-2 text-gray-700 hover:text-blue-600 font-medium">My Listings</Link> */}
                 <Link to="/listings/create" className="block py-2 text-gray-700 hover:text-blue-600 font-medium">Add Equipment</Link>
               </>
             )}

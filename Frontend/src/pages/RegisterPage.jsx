@@ -98,7 +98,7 @@ export default function RegisterPage() {
               <span className="text-lg font-bold text-white">🌾</span>
             </div>
             <div>
-              <h1 className="text-lg font-bold text-gray-900">AgriBuy</h1>
+              <h1 className="text-lg font-bold text-gray-900">FarmFlex</h1>
               <p className="text-xs text-gray-500">Equipment Marketplace</p>
             </div>
           </Link>
@@ -114,7 +114,7 @@ export default function RegisterPage() {
           <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-lg">
             <div className="mb-8">
               <h2 className="text-3xl font-bold text-gray-900 mb-2">Create Account</h2>
-              <p className="text-gray-600">Join AgriBuy and start connecting today</p>
+              <p className="text-gray-600">Join FarmFlex and start connecting today</p>
             </div>
 
             {error && (

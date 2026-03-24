@@ -3,9 +3,7 @@ package com.example.DTO;
 import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 
-/**
- * DTO for creating a new listing
- */
+
 public class ListingCreateRequest {
 
     @NotBlank(message = "Title is required")

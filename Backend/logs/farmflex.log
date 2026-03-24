@@ -1,0 +1,796 @@
+2026-02-18 00:27:49 - Starting BackendApplication using Java 21.0.10 with PID 20688 (c:\Users\hp\Downloads\AgriMart\Backend\target\classes started by hp in c:\Users\hp\Downloads\AgriMart\Backend)
+2026-02-18 00:27:49 - Running with Spring Boot v3.5.3, Spring v6.2.8
+2026-02-18 00:27:49 - No active profile set, falling back to 1 default profile: "default"
+2026-02-18 00:27:49 - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-02-18 00:27:49 - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-02-18 00:27:50 - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-18 00:27:50 - Finished Spring Data repository scanning in 73 ms. Found 4 JPA repository interfaces.
+2026-02-18 00:27:51 - Tomcat initialized with port 8090 (http)
+2026-02-18 00:27:51 - Starting service [Tomcat]
+2026-02-18 00:27:51 - Starting Servlet engine: [Apache Tomcat/10.1.42]
+2026-02-18 00:27:51 - Initializing Spring embedded WebApplicationContext
+2026-02-18 00:27:51 - Root WebApplicationContext: initialization completed in 1593 ms
+2026-02-18 00:27:51 - Filter 'jwtAuthenticationFilter' configured for use
+2026-02-18 00:27:51 - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-02-18 00:27:51 - HHH000412: Hibernate ORM core version 6.6.18.Final
+2026-02-18 00:27:51 - HHH000026: Second-level cache disabled
+2026-02-18 00:27:52 - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-02-18 00:27:52 - HikariPool-1 - Starting...
+2026-02-18 00:27:52 - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@22d850a4
+2026-02-18 00:27:52 - HikariPool-1 - Start completed.
+2026-02-18 00:27:52 - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 17.5
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-02-18 00:27:53 - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-02-18 00:27:53 - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-18 00:27:54 - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-02-18 00:27:55 - Async task executor initialized with core pool size: 2, max pool size: 5
+2026-02-18 00:27:55 - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-02-18 00:27:55 - Global AuthenticationManager configured with UserDetailsService bean with name userDetailsServiceImpl
+2026-02-18 00:27:56 - LiveReload server is running on port 35729
+2026-02-18 00:27:56 - Tomcat started on port 8090 (http) with context path '/'
+2026-02-18 00:27:56 - Started BackendApplication in 6.817 seconds (process running for 7.297)
+2026-02-18 00:29:47 - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-02-18 00:29:47 - Initializing Servlet 'dispatcherServlet'
+2026-02-18 00:29:47 - Completed initialization in 3 ms
+2026-02-18 00:29:47 - JWT token validation failed: JWT expired at 2026-02-08T14:39:13Z. Current time: 2026-02-17T18:59:47Z, a difference of 793234815 milliseconds.  Allowed clock skew: 0 milliseconds.
+2026-02-18 00:29:48 - JWT token validation failed: JWT expired at 2026-02-08T14:39:13Z. Current time: 2026-02-17T18:59:48Z, a difference of 793235351 milliseconds.  Allowed clock skew: 0 milliseconds.
+2026-02-18 00:29:53 - JWT token validation failed: JWT expired at 2026-02-08T14:39:13Z. Current time: 2026-02-17T18:59:53Z, a difference of 793240885 milliseconds.  Allowed clock skew: 0 milliseconds.
+2026-02-18 00:29:54 - Unexpected error occurred
+org.springframework.web.bind.ServletRequestBindingException: Missing request attribute 'userId' of type Long
+	at org.springframework.web.servlet.mvc.method.annotation.RequestAttributeMethodArgumentResolver.handleMissingValue(RequestAttributeMethodArgumentResolver.java:60)
+	at org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver.handleMissingValue(AbstractNamedValueMethodArgumentResolver.java:234)
+	at org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver.resolveArgument(AbstractNamedValueMethodArgumentResolver.java:125)
+	at org.springframework.web.method.support.HandlerMethodArgumentResolverComposite.resolveArgument(HandlerMethodArgumentResolverComposite.java:122)
+	at org.springframework.web.method.support.InvocableHandlerMethod.getMethodArgumentValues(InvocableHandlerMethod.java:227)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:181)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:986)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:891)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:101)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:125)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:119)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at com.example.Security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:57)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.ServletRequestPathFilter.doFilter(ServletRequestPathFilter.java:52)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebSecurityConfiguration.java:319)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$4(HandlerMappingIntrospector.java:267)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:240)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:362)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:278)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:116)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:398)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1769)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1189)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:658)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-02-18 00:29:54 - Resolved [org.springframework.web.bind.ServletRequestBindingException: Missing request attribute 'userId' of type Long]
+2026-02-18 00:29:54 - JWT token validation failed: JWT expired at 2026-02-08T14:39:13Z. Current time: 2026-02-17T18:59:54Z, a difference of 793241357 milliseconds.  Allowed clock skew: 0 milliseconds.
+2026-02-18 00:29:54 - Unexpected error occurred
+org.springframework.web.bind.ServletRequestBindingException: Missing request attribute 'userId' of type Long
+	at org.springframework.web.servlet.mvc.method.annotation.RequestAttributeMethodArgumentResolver.handleMissingValue(RequestAttributeMethodArgumentResolver.java:60)
+	at org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver.handleMissingValue(AbstractNamedValueMethodArgumentResolver.java:234)
+	at org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver.resolveArgument(AbstractNamedValueMethodArgumentResolver.java:125)
+	at org.springframework.web.method.support.HandlerMethodArgumentResolverComposite.resolveArgument(HandlerMethodArgumentResolverComposite.java:122)
+	at org.springframework.web.method.support.InvocableHandlerMethod.getMethodArgumentValues(InvocableHandlerMethod.java:227)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:181)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:986)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:891)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:101)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:125)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:119)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at com.example.Security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:57)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.ServletRequestPathFilter.doFilter(ServletRequestPathFilter.java:52)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebSecurityConfiguration.java:319)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$4(HandlerMappingIntrospector.java:267)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:240)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:362)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:278)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:116)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:398)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1769)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1189)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:658)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-02-18 00:29:54 - Resolved [org.springframework.web.bind.ServletRequestBindingException: Missing request attribute 'userId' of type Long]
+2026-02-18 00:32:55 - User logged in successfully: Venkat Ramana (FARMER)
+2026-02-18 00:32:55 - Login notification email queued for: sadhanalavenkat372@gmail.com
+2026-02-18 00:33:06 - Failed to send login notification email to: sadhanalavenkat372@gmail.com
+org.springframework.mail.MailSendException: Mail server connection failed. Failed messages: org.eclipse.angus.mail.util.MailConnectException: Couldn't connect to host, port: smtp.gmail.com, 587; timeout 5000;
+  nested exception is:
+	java.net.SocketTimeoutException: Connect timed out
+	at org.springframework.mail.javamail.JavaMailSenderImpl.doSend(JavaMailSenderImpl.java:410)
+	at org.springframework.mail.javamail.JavaMailSenderImpl.send(JavaMailSenderImpl.java:317)
+	at org.springframework.mail.MailSender.send(MailSender.java:42)
+	at com.example.Service.EmailService.sendLoginNotificationEmail(EmailService.java:274)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:359)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.interceptor.AsyncExecutionInterceptor.lambda$invoke$0(AsyncExecutionInterceptor.java:114)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: org.eclipse.angus.mail.util.MailConnectException: Couldn't connect to host, port: smtp.gmail.com, 587; timeout 5000
+	at org.eclipse.angus.mail.smtp.SMTPTransport.openServer(SMTPTransport.java:2243)
+	at org.eclipse.angus.mail.smtp.SMTPTransport.protocolConnect(SMTPTransport.java:729)
+	at jakarta.mail.Service.connect(Service.java:345)
+	at org.springframework.mail.javamail.JavaMailSenderImpl.connectTransport(JavaMailSenderImpl.java:480)
+	at org.springframework.mail.javamail.JavaMailSenderImpl.doSend(JavaMailSenderImpl.java:399)
+	... 13 common frames omitted
+Caused by: java.net.SocketTimeoutException: Connect timed out
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:546)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:592)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:751)
+	at org.eclipse.angus.mail.util.WriteTimeoutSocket.connect(WriteTimeoutSocket.java:118)
+	at org.eclipse.angus.mail.util.SocketFetcher.createSocket(SocketFetcher.java:366)
+	at org.eclipse.angus.mail.util.SocketFetcher.getSocket(SocketFetcher.java:243)
+	at org.eclipse.angus.mail.smtp.SMTPTransport.openServer(SMTPTransport.java:2193)
+	... 17 common frames omitted
+2026-02-18 00:36:55 - JWT token validation successful
+2026-02-18 00:36:55 - JWT authentication set for user: 5
+2026-02-18 00:36:55 - JWT token validation successful
+2026-02-18 00:36:55 - JWT authentication set for user: 5
+2026-02-18 00:36:57 - JWT token validation successful
+2026-02-18 00:36:57 - JWT authentication set for user: 5
+2026-02-18 00:36:58 - JWT token validation successful
+2026-02-18 00:36:58 - JWT authentication set for user: 5
+2026-02-18 00:37:09 - JWT token validation successful
+2026-02-18 00:37:09 - JWT authentication set for user: 5
+2026-02-18 00:37:10 - Calculated rent amount: 9 days * 2500.00 = 22500.00
+2026-02-18 00:37:10 - Failed to create Razorpay order for listing 2: BAD_REQUEST_ERROR:Authentication failed
+2026-02-18 00:37:10 - Invalid order request: Failed to create payment order
+2026-02-18 00:39:40 - JWT token validation successful
+2026-02-18 00:39:40 - JWT authentication set for user: 5
+2026-02-18 00:39:40 - JWT token validation successful
+2026-02-18 00:39:40 - JWT authentication set for user: 5
+2026-02-18 00:39:43 - JWT token validation successful
+2026-02-18 00:39:43 - JWT authentication set for user: 5
+2026-02-18 00:39:43 - JWT token validation successful
+2026-02-18 00:39:43 - JWT authentication set for user: 5
+2026-02-18 00:39:48 - JWT token validation successful
+2026-02-18 00:39:48 - JWT authentication set for user: 5
+2026-02-18 00:39:48 - JWT token validation successful
+2026-02-18 00:39:48 - JWT authentication set for user: 5
+2026-02-18 00:40:06 - JWT token validation successful
+2026-02-18 00:40:06 - JWT authentication set for user: 5
+2026-02-18 00:40:06 - JWT token validation successful
+2026-02-18 00:40:06 - JWT authentication set for user: 5
+2026-02-18 00:40:11 - JWT token validation successful
+2026-02-18 00:40:11 - JWT authentication set for user: 5
+2026-02-18 00:40:12 - JWT token validation successful
+2026-02-18 00:40:12 - JWT authentication set for user: 5
+2026-02-18 00:40:59 - JWT token validation successful
+2026-02-18 00:40:59 - JWT authentication set for user: 5
+2026-02-18 00:40:59 - JWT token validation successful
+2026-02-18 00:40:59 - JWT authentication set for user: 5
+2026-02-18 00:41:00 - JWT token validation successful
+2026-02-18 00:41:00 - JWT authentication set for user: 5
+2026-02-18 00:41:00 - JWT token validation successful
+2026-02-18 00:41:00 - JWT authentication set for user: 5
+2026-02-18 00:41:09 - JWT token validation successful
+2026-02-18 00:41:09 - JWT authentication set for user: 5
+2026-02-18 00:41:09 - Calculated rent amount: 9 days * 2500.00 = 22500.00
+2026-02-18 00:41:09 - Failed to create Razorpay order for listing 2: BAD_REQUEST_ERROR:Authentication failed
+2026-02-18 00:41:09 - Invalid order request: Failed to create payment order
+2026-02-18 00:41:13 - JWT token validation successful
+2026-02-18 00:41:13 - JWT authentication set for user: 5
+2026-02-18 00:41:13 - JWT token validation successful
+2026-02-18 00:41:13 - JWT authentication set for user: 5
+2026-02-18 00:41:17 - JWT token validation successful
+2026-02-18 00:41:17 - JWT authentication set for user: 5
+2026-02-18 00:41:17 - JWT token validation successful
+2026-02-18 00:41:17 - JWT authentication set for user: 5
+2026-02-18 00:43:15 - Login attempt with non-existent email: admin@farmflex.com
+2026-02-18 00:43:35 - Login attempt with non-existent email: admin@gmail.com
+2026-02-18 00:48:32 - User logged in successfully: Admin User (ADMIN)
+2026-02-18 00:48:32 - Login notification email queued for: admin@agribuy.com
+2026-02-18 00:48:32 - JWT token validation successful
+2026-02-18 00:48:32 - JWT authentication set for user: 1
+2026-02-18 00:48:32 - Admin dashboard stats retrieved
+2026-02-18 00:48:32 - JWT token validation successful
+2026-02-18 00:48:32 - JWT authentication set for user: 1
+2026-02-18 00:48:32 - Admin dashboard stats retrieved
+2026-02-18 00:48:42 - Failed to send login notification email to: admin@agribuy.com
+org.springframework.mail.MailSendException: Mail server connection failed. Failed messages: org.eclipse.angus.mail.util.MailConnectException: Couldn't connect to host, port: smtp.gmail.com, 587; timeout 5000;
+  nested exception is:
+	java.net.SocketTimeoutException: Connect timed out
+	at org.springframework.mail.javamail.JavaMailSenderImpl.doSend(JavaMailSenderImpl.java:410)
+	at org.springframework.mail.javamail.JavaMailSenderImpl.send(JavaMailSenderImpl.java:317)
+	at org.springframework.mail.MailSender.send(MailSender.java:42)
+	at com.example.Service.EmailService.sendLoginNotificationEmail(EmailService.java:274)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:359)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.interceptor.AsyncExecutionInterceptor.lambda$invoke$0(AsyncExecutionInterceptor.java:114)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: org.eclipse.angus.mail.util.MailConnectException: Couldn't connect to host, port: smtp.gmail.com, 587; timeout 5000
+	at org.eclipse.angus.mail.smtp.SMTPTransport.openServer(SMTPTransport.java:2243)
+	at org.eclipse.angus.mail.smtp.SMTPTransport.protocolConnect(SMTPTransport.java:729)
+	at jakarta.mail.Service.connect(Service.java:345)
+	at org.springframework.mail.javamail.JavaMailSenderImpl.connectTransport(JavaMailSenderImpl.java:480)
+	at org.springframework.mail.javamail.JavaMailSenderImpl.doSend(JavaMailSenderImpl.java:399)
+	... 13 common frames omitted
+Caused by: java.net.SocketTimeoutException: Connect timed out
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:546)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:592)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:751)
+	at org.eclipse.angus.mail.util.WriteTimeoutSocket.connect(WriteTimeoutSocket.java:118)
+	at org.eclipse.angus.mail.util.SocketFetcher.createSocket(SocketFetcher.java:366)
+	at org.eclipse.angus.mail.util.SocketFetcher.getSocket(SocketFetcher.java:243)
+	at org.eclipse.angus.mail.smtp.SMTPTransport.openServer(SMTPTransport.java:2193)
+	... 17 common frames omitted
+2026-02-18 00:49:13 - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2026-02-18 00:49:13 - Commencing graceful shutdown. Waiting for active requests to complete
+2026-02-18 00:49:13 - Graceful shutdown complete
+2026-02-18 00:49:13 - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-02-18 00:49:13 - HikariPool-1 - Shutdown initiated...
+2026-02-18 00:49:13 - HikariPool-1 - Shutdown completed.
+2026-02-18 00:49:13 - Starting BackendApplication using Java 21.0.10 with PID 20688 (c:\Users\hp\Downloads\AgriMart\Backend\target\classes started by hp in c:\Users\hp\Downloads\AgriMart\Backend)
+2026-02-18 00:49:13 - Running with Spring Boot v3.5.3, Spring v6.2.8
+2026-02-18 00:49:13 - No active profile set, falling back to 1 default profile: "default"
+2026-02-18 00:49:13 - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-18 00:49:13 - Finished Spring Data repository scanning in 51 ms. Found 4 JPA repository interfaces.
+2026-02-18 00:49:14 - Tomcat initialized with port 8090 (http)
+2026-02-18 00:49:14 - Starting service [Tomcat]
+2026-02-18 00:49:14 - Starting Servlet engine: [Apache Tomcat/10.1.42]
+2026-02-18 00:49:14 - Initializing Spring embedded WebApplicationContext
+2026-02-18 00:49:14 - Root WebApplicationContext: initialization completed in 1053 ms
+2026-02-18 00:49:14 - Filter 'jwtAuthenticationFilter' configured for use
+2026-02-18 00:49:14 - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-02-18 00:49:14 - HHH000026: Second-level cache disabled
+2026-02-18 00:49:14 - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-02-18 00:49:14 - HikariPool-2 - Starting...
+2026-02-18 00:49:14 - HikariPool-2 - Added connection org.postgresql.jdbc.PgConnection@19e5eccf
+2026-02-18 00:49:14 - HikariPool-2 - Start completed.
+2026-02-18 00:49:14 - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-2)']
+	Database driver: undefined/unknown
+	Database version: 17.5
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-02-18 00:49:15 - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-02-18 00:49:15 - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-18 00:49:16 - Async task executor initialized with core pool size: 2, max pool size: 5
+2026-02-18 00:49:16 - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-02-18 00:49:17 - Global AuthenticationManager configured with UserDetailsService bean with name userDetailsServiceImpl
+2026-02-18 00:49:18 - LiveReload server is running on port 35729
+2026-02-18 00:49:18 - Tomcat started on port 8090 (http) with context path '/'
+2026-02-18 00:49:18 - Started BackendApplication in 4.945 seconds (process running for 1289.493)
+2026-02-18 00:49:18 - Condition evaluation unchanged
+2026-02-18 00:49:19 - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2026-02-18 00:49:19 - Commencing graceful shutdown. Waiting for active requests to complete
+2026-02-18 00:49:19 - Graceful shutdown complete
+2026-02-18 00:49:19 - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-02-18 00:49:19 - HikariPool-2 - Shutdown initiated...
+2026-02-18 00:49:19 - HikariPool-2 - Shutdown completed.
+2026-02-18 00:49:20 - Starting BackendApplication using Java 21.0.10 with PID 20688 (c:\Users\hp\Downloads\AgriMart\Backend\target\classes started by hp in c:\Users\hp\Downloads\AgriMart\Backend)
+2026-02-18 00:49:20 - Running with Spring Boot v3.5.3, Spring v6.2.8
+2026-02-18 00:49:20 - No active profile set, falling back to 1 default profile: "default"
+2026-02-18 00:49:20 - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-18 00:49:20 - Finished Spring Data repository scanning in 29 ms. Found 4 JPA repository interfaces.
+2026-02-18 00:49:20 - Tomcat initialized with port 8090 (http)
+2026-02-18 00:49:20 - Starting service [Tomcat]
+2026-02-18 00:49:20 - Starting Servlet engine: [Apache Tomcat/10.1.42]
+2026-02-18 00:49:20 - Initializing Spring embedded WebApplicationContext
+2026-02-18 00:49:20 - Root WebApplicationContext: initialization completed in 747 ms
+2026-02-18 00:49:20 - Filter 'jwtAuthenticationFilter' configured for use
+2026-02-18 00:49:21 - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-02-18 00:49:21 - HHH000026: Second-level cache disabled
+2026-02-18 00:49:21 - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-02-18 00:49:21 - HikariPool-3 - Starting...
+2026-02-18 00:49:21 - HikariPool-3 - Added connection org.postgresql.jdbc.PgConnection@7f8dfaf3
+2026-02-18 00:49:21 - HikariPool-3 - Start completed.
+2026-02-18 00:49:21 - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-3)']
+	Database driver: undefined/unknown
+	Database version: 17.5
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-02-18 00:49:21 - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-02-18 00:49:21 - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-18 00:49:23 - Async task executor initialized with core pool size: 2, max pool size: 5
+2026-02-18 00:49:23 - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-02-18 00:49:23 - Global AuthenticationManager configured with UserDetailsService bean with name userDetailsServiceImpl
+2026-02-18 00:49:24 - LiveReload server is running on port 35729
+2026-02-18 00:49:24 - Tomcat started on port 8090 (http) with context path '/'
+2026-02-18 00:49:24 - Started BackendApplication in 4.449 seconds (process running for 1295.613)
+2026-02-18 00:49:24 - Condition evaluation unchanged
+2026-02-18 00:50:01 - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-02-18 00:50:01 - Initializing Servlet 'dispatcherServlet'
+2026-02-18 00:50:01 - Completed initialization in 4 ms
+2026-02-18 00:50:01 - JWT token validation successful
+2026-02-18 00:50:01 - JWT authentication set for user: 1
+2026-02-18 00:50:01 - Admin dashboard stats retrieved
+2026-02-18 00:50:01 - JWT token validation successful
+2026-02-18 00:50:01 - JWT authentication set for user: 1
+2026-02-18 00:50:01 - Admin dashboard stats retrieved
+2026-02-18 00:56:34 - JWT token validation successful
+2026-02-18 00:56:34 - JWT authentication set for user: 1
+2026-02-18 00:56:34 - Admin dashboard stats retrieved
+2026-02-18 00:56:34 - JWT token validation successful
+2026-02-18 00:56:34 - JWT authentication set for user: 1
+2026-02-18 00:56:34 - Admin dashboard stats retrieved
+2026-02-18 00:56:45 - JWT token validation successful
+2026-02-18 00:56:45 - JWT authentication set for user: 1
+2026-02-18 00:56:45 - Retrieved 0 pending listings
+2026-02-18 00:56:45 - JWT token validation successful
+2026-02-18 00:56:45 - JWT authentication set for user: 1
+2026-02-18 00:56:45 - Retrieved 0 pending listings
+2026-02-18 00:56:48 - JWT token validation successful
+2026-02-18 00:56:48 - JWT authentication set for user: 1
+2026-02-18 00:56:48 - Admin dashboard stats retrieved
+2026-02-18 00:56:48 - JWT token validation successful
+2026-02-18 00:56:48 - JWT authentication set for user: 1
+2026-02-18 00:56:48 - Admin dashboard stats retrieved
+2026-02-18 00:57:02 - JWT token validation successful
+2026-02-18 00:57:02 - JWT authentication set for user: 1
+2026-02-18 00:57:02 - JWT token validation successful
+2026-02-18 00:57:02 - JWT authentication set for user: 1
+2026-02-18 00:57:09 - JWT token validation successful
+2026-02-18 00:57:09 - JWT authentication set for user: 1
+2026-02-18 00:57:09 - Retrieved 0 pending listings
+2026-02-18 00:57:09 - JWT token validation successful
+2026-02-18 00:57:09 - JWT authentication set for user: 1
+2026-02-18 00:57:09 - Retrieved 0 pending listings
+2026-02-18 00:57:29 - JWT token validation successful
+2026-02-18 00:57:29 - JWT authentication set for user: 1
+2026-02-18 00:57:29 - Admin dashboard stats retrieved
+2026-02-18 00:57:29 - JWT token validation successful
+2026-02-18 00:57:29 - JWT authentication set for user: 1
+2026-02-18 00:57:29 - Admin dashboard stats retrieved
+2026-02-18 00:57:47 - User logged in successfully: Venkat Ramana (FARMER)
+2026-02-18 00:57:47 - Login notification email queued for: sadhanalavenkat372@gmail.com
+2026-02-18 00:57:55 - JWT token validation successful
+2026-02-18 00:57:55 - JWT authentication set for user: 5
+2026-02-18 00:57:55 - JWT token validation successful
+2026-02-18 00:57:55 - JWT authentication set for user: 5
+2026-02-18 00:57:57 - Failed to send login notification email to: sadhanalavenkat372@gmail.com
+org.springframework.mail.MailSendException: Mail server connection failed. Failed messages: org.eclipse.angus.mail.util.MailConnectException: Couldn't connect to host, port: smtp.gmail.com, 587; timeout 5000;
+  nested exception is:
+	java.net.SocketTimeoutException: Connect timed out
+	at org.springframework.mail.javamail.JavaMailSenderImpl.doSend(JavaMailSenderImpl.java:410) ~[spring-context-support-6.2.8.jar:6.2.8]
+	at org.springframework.mail.javamail.JavaMailSenderImpl.send(JavaMailSenderImpl.java:317) ~[spring-context-support-6.2.8.jar:6.2.8]
+	at org.springframework.mail.MailSender.send(MailSender.java:42) ~[spring-context-support-6.2.8.jar:6.2.8]
+	at com.example.Service.EmailService.sendLoginNotificationEmail(EmailService.java:274) ~[classes/:na]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:359) ~[spring-aop-6.2.8.jar:6.2.8]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196) ~[spring-aop-6.2.8.jar:6.2.8]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163) ~[spring-aop-6.2.8.jar:6.2.8]
+	at org.springframework.aop.interceptor.AsyncExecutionInterceptor.lambda$invoke$0(AsyncExecutionInterceptor.java:114) ~[spring-aop-6.2.8.jar:6.2.8]
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317) ~[na:na]
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144) ~[na:na]
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642) ~[na:na]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
+Caused by: org.eclipse.angus.mail.util.MailConnectException: Couldn't connect to host, port: smtp.gmail.com, 587; timeout 5000
+	at org.eclipse.angus.mail.smtp.SMTPTransport.openServer(SMTPTransport.java:2243) ~[jakarta.mail-2.0.3.jar:na]
+	at org.eclipse.angus.mail.smtp.SMTPTransport.protocolConnect(SMTPTransport.java:729) ~[jakarta.mail-2.0.3.jar:na]
+	at jakarta.mail.Service.connect(Service.java:345) ~[jakarta.mail-2.0.3.jar:na]
+	at org.springframework.mail.javamail.JavaMailSenderImpl.connectTransport(JavaMailSenderImpl.java:480) ~[spring-context-support-6.2.8.jar:6.2.8]
+	at org.springframework.mail.javamail.JavaMailSenderImpl.doSend(JavaMailSenderImpl.java:399) ~[spring-context-support-6.2.8.jar:6.2.8]
+	... 13 common frames omitted
+Caused by: java.net.SocketTimeoutException: Connect timed out
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:546) ~[na:na]
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:592) ~[na:na]
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327) ~[na:na]
+	at java.base/java.net.Socket.connect(Socket.java:751) ~[na:na]
+	at org.eclipse.angus.mail.util.WriteTimeoutSocket.connect(WriteTimeoutSocket.java:118) ~[jakarta.mail-2.0.3.jar:na]
+	at org.eclipse.angus.mail.util.SocketFetcher.createSocket(SocketFetcher.java:366) ~[jakarta.mail-2.0.3.jar:na]
+	at org.eclipse.angus.mail.util.SocketFetcher.getSocket(SocketFetcher.java:243) ~[jakarta.mail-2.0.3.jar:na]
+	at org.eclipse.angus.mail.smtp.SMTPTransport.openServer(SMTPTransport.java:2193) ~[jakarta.mail-2.0.3.jar:na]
+	... 17 common frames omitted
+2026-02-18 00:57:58 - JWT token validation successful
+2026-02-18 00:57:58 - JWT authentication set for user: 5
+2026-02-18 00:57:58 - JWT token validation successful
+2026-02-18 00:57:58 - JWT authentication set for user: 5
+2026-02-18 00:58:02 - JWT token validation successful
+2026-02-18 00:58:02 - JWT authentication set for user: 5
+2026-02-18 00:58:02 - JWT token validation successful
+2026-02-18 00:58:02 - JWT authentication set for user: 5
+2026-02-18 00:58:03 - JWT token validation successful
+2026-02-18 00:58:03 - JWT authentication set for user: 5
+2026-02-18 00:58:03 - JWT token validation successful
+2026-02-18 00:58:03 - JWT authentication set for user: 5
+2026-02-18 00:58:18 - JWT token validation successful
+2026-02-18 00:58:18 - JWT authentication set for user: 5
+2026-02-18 00:58:18 - JWT token validation successful
+2026-02-18 00:58:18 - JWT authentication set for user: 5
+2026-02-18 00:58:38 - JWT token validation successful
+2026-02-18 00:58:38 - JWT authentication set for user: 5
+2026-02-18 00:58:38 - JWT token validation successful
+2026-02-18 00:58:38 - JWT authentication set for user: 5
+2026-02-18 00:58:42 - JWT token validation successful
+2026-02-18 00:58:42 - JWT authentication set for user: 5
+2026-02-18 00:58:42 - JWT token validation successful
+2026-02-18 00:58:42 - JWT authentication set for user: 5
+2026-02-18 00:59:28 - JWT token validation successful
+2026-02-18 00:59:28 - JWT authentication set for user: 5
+2026-02-18 00:59:28 - JWT token validation successful
+2026-02-18 00:59:28 - JWT authentication set for user: 5
+2026-02-18 00:59:37 - JWT token validation successful
+2026-02-18 00:59:37 - JWT authentication set for user: 5
+2026-02-18 00:59:37 - JWT token validation successful
+2026-02-18 00:59:37 - JWT authentication set for user: 5
+2026-02-18 01:01:55 - JWT token validation successful
+2026-02-18 01:01:55 - JWT authentication set for user: 5
+2026-02-18 01:01:55 - JWT token validation successful
+2026-02-18 01:01:55 - JWT authentication set for user: 5
+2026-02-18 01:02:27 - JWT token validation successful
+2026-02-18 01:02:27 - JWT authentication set for user: 5
+2026-02-18 01:02:27 - JWT token validation successful
+2026-02-18 01:02:27 - JWT authentication set for user: 5
+2026-02-18 01:02:58 - JWT token validation successful
+2026-02-18 01:02:58 - JWT authentication set for user: 5
+2026-02-18 01:02:58 - JWT token validation successful
+2026-02-18 01:02:58 - JWT authentication set for user: 5
+2026-02-18 01:03:07 - JWT token validation successful
+2026-02-18 01:03:07 - JWT authentication set for user: 5
+2026-02-18 01:03:07 - JWT token validation successful
+2026-02-18 01:03:07 - JWT authentication set for user: 5
+2026-02-18 01:03:56 - Commencing graceful shutdown. Waiting for active requests to complete
+2026-02-18 01:03:56 - Graceful shutdown complete
+2026-02-18 01:03:56 - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-02-18 01:03:56 - HikariPool-3 - Shutdown initiated...
+2026-02-18 01:03:56 - HikariPool-3 - Shutdown completed.
+2026-02-18 12:01:41 - Starting BackendApplication using Java 21.0.10 with PID 9256 (c:\Users\hp\Downloads\AgriMart\Backend\target\classes started by hp in c:\Users\hp\Downloads\AgriMart\Backend)
+2026-02-18 12:01:41 - Running with Spring Boot v3.5.3, Spring v6.2.8
+2026-02-18 12:01:41 - No active profile set, falling back to 1 default profile: "default"
+2026-02-18 12:01:41 - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-02-18 12:01:41 - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-02-18 12:01:42 - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-18 12:01:42 - Finished Spring Data repository scanning in 58 ms. Found 4 JPA repository interfaces.
+2026-02-18 12:01:42 - Tomcat initialized with port 8090 (http)
+2026-02-18 12:01:42 - Starting service [Tomcat]
+2026-02-18 12:01:42 - Starting Servlet engine: [Apache Tomcat/10.1.42]
+2026-02-18 12:01:42 - Initializing Spring embedded WebApplicationContext
+2026-02-18 12:01:42 - Root WebApplicationContext: initialization completed in 1533 ms
+2026-02-18 12:01:42 - Filter 'jwtAuthenticationFilter' configured for use
+2026-02-18 12:01:43 - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-02-18 12:01:43 - HHH000412: Hibernate ORM core version 6.6.18.Final
+2026-02-18 12:01:43 - HHH000026: Second-level cache disabled
+2026-02-18 12:01:43 - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-02-18 12:01:43 - HikariPool-1 - Starting...
+2026-02-18 12:01:43 - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@3cb79c82
+2026-02-18 12:01:43 - HikariPool-1 - Start completed.
+2026-02-18 12:01:44 - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 17.5
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-02-18 12:01:45 - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-02-18 12:01:45 - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-18 12:01:46 - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-02-18 12:01:47 - Async task executor initialized with core pool size: 2, max pool size: 5
+2026-02-18 12:01:48 - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-02-18 12:01:48 - Global AuthenticationManager configured with UserDetailsService bean with name userDetailsServiceImpl
+2026-02-18 12:01:48 - LiveReload server is running on port 35729
+2026-02-18 12:01:48 - Tomcat started on port 8090 (http) with context path '/'
+2026-02-18 12:01:48 - Started BackendApplication in 8.201 seconds (process running for 8.745)
+2026-02-18 12:25:13 - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-02-18 12:25:13 - Initializing Servlet 'dispatcherServlet'
+2026-02-18 12:25:13 - Completed initialization in 7 ms
+2026-02-18 12:26:42 - User logged in successfully: Venkat Ramana (FARMER)
+2026-02-18 12:26:42 - Login notification email queued for: sadhanalavenkat372@gmail.com
+2026-02-18 12:26:43 - Failed to send login notification email to: sadhanalavenkat372@gmail.com
+org.springframework.mail.MailSendException: Mail server connection failed. Failed messages: org.eclipse.angus.mail.util.MailConnectException: Couldn't connect to host, port: smtp.gmail.com, 587; timeout 5000;
+  nested exception is:
+	java.net.UnknownHostException: smtp.gmail.com
+	at org.springframework.mail.javamail.JavaMailSenderImpl.doSend(JavaMailSenderImpl.java:410)
+	at org.springframework.mail.javamail.JavaMailSenderImpl.send(JavaMailSenderImpl.java:317)
+	at org.springframework.mail.MailSender.send(MailSender.java:42)
+	at com.example.Service.EmailService.sendLoginNotificationEmail(EmailService.java:274)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:359)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.interceptor.AsyncExecutionInterceptor.lambda$invoke$0(AsyncExecutionInterceptor.java:114)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: org.eclipse.angus.mail.util.MailConnectException: Couldn't connect to host, port: smtp.gmail.com, 587; timeout 5000
+	at org.eclipse.angus.mail.smtp.SMTPTransport.openServer(SMTPTransport.java:2243)
+	at org.eclipse.angus.mail.smtp.SMTPTransport.protocolConnect(SMTPTransport.java:729)
+	at jakarta.mail.Service.connect(Service.java:345)
+	at org.springframework.mail.javamail.JavaMailSenderImpl.connectTransport(JavaMailSenderImpl.java:480)
+	at org.springframework.mail.javamail.JavaMailSenderImpl.doSend(JavaMailSenderImpl.java:399)
+	... 13 common frames omitted
+Caused by: java.net.UnknownHostException: smtp.gmail.com
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:567)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:751)
+	at org.eclipse.angus.mail.util.WriteTimeoutSocket.connect(WriteTimeoutSocket.java:118)
+	at org.eclipse.angus.mail.util.SocketFetcher.createSocket(SocketFetcher.java:366)
+	at org.eclipse.angus.mail.util.SocketFetcher.getSocket(SocketFetcher.java:243)
+	at org.eclipse.angus.mail.smtp.SMTPTransport.openServer(SMTPTransport.java:2193)
+	... 17 common frames omitted
+2026-02-18 12:27:43 - JWT token validation successful
+2026-02-18 12:27:43 - JWT authentication set for user: 5
+2026-02-18 12:27:43 - Creating the temporary upload location [C:\Users\hp\AppData\Local\Temp\tomcat.8090.12841960694801363154\work\Tomcat\localhost\ROOT] as it is required by the servlet [dispatcherServlet]
+2026-02-18 12:27:43 - Creating listing for farmer: 5 with title: tractor and 1 images
+2026-02-18 12:27:43 - Saved image 4f06dff9-50f1-42f0-81c4-bd35d6516d10.png to disk, URL: /images/4f06dff9-50f1-42f0-81c4-bd35d6516d10.png
+2026-02-18 12:27:43 - Saved 1 images for listing
+2026-02-18 12:27:43 - Listing created by farmer 5: 10
+2026-02-18 12:27:43 - Listing created successfully with ID: 10
+2026-02-18 12:27:51 - JWT token validation successful
+2026-02-18 12:27:51 - JWT authentication set for user: 5
+2026-02-18 12:27:51 - JWT token validation successful
+2026-02-18 12:27:51 - JWT authentication set for user: 5
+2026-02-18 12:39:01 - User logged in successfully: Admin User (ADMIN)
+2026-02-18 12:39:01 - Login notification email queued for: admin@agribuy.com
+2026-02-18 12:39:01 - JWT token validation successful
+2026-02-18 12:39:01 - JWT authentication set for user: 1
+2026-02-18 12:39:02 - Admin dashboard stats retrieved
+2026-02-18 12:39:02 - JWT token validation successful
+2026-02-18 12:39:02 - JWT authentication set for user: 1
+2026-02-18 12:39:02 - Admin dashboard stats retrieved
+2026-02-18 12:39:07 - Login notification email sent successfully to: admin@agribuy.com
+2026-02-18 12:39:14 - JWT token validation successful
+2026-02-18 12:39:14 - JWT authentication set for user: 1
+2026-02-18 12:39:14 - Admin dashboard stats retrieved
+2026-02-18 12:39:14 - JWT token validation successful
+2026-02-18 12:39:14 - JWT authentication set for user: 1
+2026-02-18 12:39:14 - Admin dashboard stats retrieved
+2026-02-18 12:39:46 - JWT token validation successful
+2026-02-18 12:39:46 - JWT authentication set for user: 1
+2026-02-18 12:39:46 - Retrieved 1 pending listings
+2026-02-18 12:39:46 - JWT token validation successful
+2026-02-18 12:39:46 - JWT authentication set for user: 1
+2026-02-18 12:39:46 - Retrieved 1 pending listings
+2026-02-18 12:40:29 - JWT token validation successful
+2026-02-18 12:40:29 - JWT authentication set for user: 1
+2026-02-18 12:40:29 - Listing 10 rejected by admin 1
+2026-02-18 12:40:32 - JWT token validation successful
+2026-02-18 12:40:32 - JWT authentication set for user: 1
+2026-02-18 12:40:32 - Invalid rejection request: Only pending listings can be rejected
+2026-02-18 12:40:34 - Listing status email sent to: sadhanalavenkat372@gmail.com
+2026-02-18 12:40:34 - Listing 10 rejected by admin 1 and email sent with reason: images not explorative
+
+2026-02-18 12:40:38 - JWT token validation successful
+2026-02-18 12:40:38 - JWT authentication set for user: 1
+2026-02-18 12:40:38 - Admin dashboard stats retrieved
+2026-02-18 12:40:38 - JWT token validation successful
+2026-02-18 12:40:38 - JWT authentication set for user: 1
+2026-02-18 12:40:38 - Admin dashboard stats retrieved
+2026-02-18 12:40:48 - JWT token validation successful
+2026-02-18 12:40:48 - JWT authentication set for user: 1
+2026-02-18 12:40:48 - Admin dashboard stats retrieved
+2026-02-18 12:40:49 - JWT token validation successful
+2026-02-18 12:40:49 - JWT authentication set for user: 1
+2026-02-18 12:40:49 - Admin dashboard stats retrieved
+2026-02-18 12:41:15 - User logged in successfully: Venkat Ramana (FARMER)
+2026-02-18 12:41:15 - Login notification email queued for: sadhanalavenkat372@gmail.com
+2026-02-18 12:41:23 - JWT token validation successful
+2026-02-18 12:41:23 - JWT authentication set for user: 5
+2026-02-18 12:41:23 - JWT token validation successful
+2026-02-18 12:41:23 - JWT authentication set for user: 5
+2026-02-18 12:41:27 - Failed to send login notification email to: sadhanalavenkat372@gmail.com
+org.springframework.mail.MailSendException: Mail server connection failed. Failed messages: org.eclipse.angus.mail.util.MailConnectException: Couldn't connect to host, port: smtp.gmail.com, 587; timeout 5000;
+  nested exception is:
+	java.net.UnknownHostException: smtp.gmail.com
+	at org.springframework.mail.javamail.JavaMailSenderImpl.doSend(JavaMailSenderImpl.java:410)
+	at org.springframework.mail.javamail.JavaMailSenderImpl.send(JavaMailSenderImpl.java:317)
+	at org.springframework.mail.MailSender.send(MailSender.java:42)
+	at com.example.Service.EmailService.sendLoginNotificationEmail(EmailService.java:274)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:359)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.interceptor.AsyncExecutionInterceptor.lambda$invoke$0(AsyncExecutionInterceptor.java:114)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: org.eclipse.angus.mail.util.MailConnectException: Couldn't connect to host, port: smtp.gmail.com, 587; timeout 5000
+	at org.eclipse.angus.mail.smtp.SMTPTransport.openServer(SMTPTransport.java:2243)
+	at org.eclipse.angus.mail.smtp.SMTPTransport.protocolConnect(SMTPTransport.java:729)
+	at jakarta.mail.Service.connect(Service.java:345)
+	at org.springframework.mail.javamail.JavaMailSenderImpl.connectTransport(JavaMailSenderImpl.java:480)
+	at org.springframework.mail.javamail.JavaMailSenderImpl.doSend(JavaMailSenderImpl.java:399)
+	... 13 common frames omitted
+Caused by: java.net.UnknownHostException: smtp.gmail.com
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:567)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:751)
+	at org.eclipse.angus.mail.util.WriteTimeoutSocket.connect(WriteTimeoutSocket.java:118)
+	at org.eclipse.angus.mail.util.SocketFetcher.createSocket(SocketFetcher.java:366)
+	at org.eclipse.angus.mail.util.SocketFetcher.getSocket(SocketFetcher.java:243)
+	at org.eclipse.angus.mail.smtp.SMTPTransport.openServer(SMTPTransport.java:2193)
+	... 17 common frames omitted
+2026-02-18 12:45:23 - Commencing graceful shutdown. Waiting for active requests to complete
+2026-02-18 12:45:23 - Graceful shutdown complete
+2026-02-18 12:45:23 - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-02-18 12:45:23 - HikariPool-1 - Shutdown initiated...
+2026-02-18 12:45:23 - HikariPool-1 - Shutdown completed.

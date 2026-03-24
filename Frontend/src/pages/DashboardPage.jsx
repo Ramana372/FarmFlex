@@ -32,7 +32,7 @@ export default function DashboardPage() {
               >
                 ← Back to Home
               </button>
-              <h1 className="text-2xl font-bold text-white">AgriBuy</h1>
+              <h1 className="text-2xl font-bold text-white">FarmFlex</h1>
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-white font-semibold">{user?.name}</span>

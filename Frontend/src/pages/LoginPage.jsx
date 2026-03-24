@@ -55,7 +55,7 @@ export default function LoginPage() {
       if (data.role === 'ADMIN') {
         navigate('/admin/dashboard');
       } else if (data.role === 'FARMER') {
-        navigate('/dashboard');
+        navigate('/');
       } else {
         navigate('/marketplace');
       }
@@ -77,12 +77,12 @@ export default function LoginPage() {
               <span className="text-lg font-bold text-white">🌾</span>
             </div>
             <div>
-              <h1 className="text-lg font-bold text-gray-900">AgriBuy</h1>
+              <h1 className="text-lg font-bold text-gray-900">FarmFlex</h1>
               <p className="text-xs text-gray-500">Equipment Marketplace</p>
             </div>
           </Link>
           <div>
-            <p className="text-gray-600 text-sm">New to AgriBuy? <Link to="/register" className="text-blue-600 hover:text-blue-700 font-semibold">Create account</Link></p>
+            <p className="text-gray-600 text-sm">New to FarmFlex? <Link to="/register" className="text-blue-600 hover:text-blue-700 font-semibold">Create account</Link></p>
           </div>
         </div>
       </nav>
@@ -93,7 +93,7 @@ export default function LoginPage() {
           <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-lg">
             <div className="mb-8">
               <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h2>
-              <p className="text-gray-600">Sign in to access your AgriBuy account</p>
+              <p className="text-gray-600">Sign in to access your FarmFlex account</p>
             </div>
 
             {error && (
@@ -189,8 +189,8 @@ export default function LoginPage() {
           <div className="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
             <p className="text-xs font-semibold text-gray-700 mb-2">📝 Demo Credentials:</p>
             <div className="text-xs text-gray-600 space-y-1">
-              <p><strong>Farmer:</strong> rajesh@agribuy.com / Farmer@123</p>
-              <p><strong>Admin:</strong> admin@agribuy.com / Admin@123</p>
+              <p><strong>Farmer:</strong> rajesh@farmflex.com / Farmer@123</p>
+              <p><strong>Admin:</strong> admin@farmflex.com / Admin@123</p>
             </div>
           </div>
         </div>

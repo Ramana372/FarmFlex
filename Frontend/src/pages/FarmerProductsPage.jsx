@@ -53,7 +53,7 @@ export default function FarmerProductsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center space-x-8">
-              <a href="/" className="text-2xl font-bold text-green-600">AgriBuy</a>
+              <a href="/" className="text-2xl font-bold text-green-600">FarmFlex</a>
               <a href="/farmer/dashboard" className="text-gray-700 hover:text-gray-900">Dashboard</a>
               <a href="/farmer/listings" className="text-gray-700 hover:text-gray-900 font-bold">My Listings</a>
               <a href="/listings/create" className="text-gray-700 hover:text-gray-900">Create Listing</a>

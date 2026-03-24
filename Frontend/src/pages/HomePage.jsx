@@ -205,48 +205,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="bg-blue-50 py-20 px-4 md:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">What Farmers Say</h2>
-            <p className="text-xl text-gray-600">Real stories from our community</p>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                quote: 'AgriBuy helped me find the perfect equipment at a fair price. The process was smooth and transparent.',
-                author: 'Rajesh Kumar',
-                role: 'Farmer, Maharashtra'
-              },
-              {
-                quote: 'I rent out my equipment through AgriBuy and earn a great passive income. Highly recommended!',
-                author: 'Priya Singh',
-                role: 'Agricultural Entrepreneur, Punjab'
-              },
-              {
-                quote: 'The platform is user-friendly and the support team is always helpful. Great experience overall!',
-                author: 'Arun Patel',
-                role: 'Farm Owner, Gujarat'
-              }
-            ].map((testimonial, idx) => (
-              <div key={idx} className="bg-white p-8 rounded-lg shadow-sm border border-gray-200">
-                <div className="flex gap-1 mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <span key={i} className="text-yellow-400">★</span>
-                  ))}
-                </div>
-                <p className="text-gray-600 italic mb-6 leading-relaxed">"{testimonial.quote}"</p>
-                <div>
-                  <p className="font-semibold text-gray-900">{testimonial.author}</p>
-                  <p className="text-sm text-gray-500">{testimonial.role}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* CTA Section */}
       <section className="relative bg-gradient-to-br from-blue-600 via-green-300 to-emerald-700 py-24 px-4 md:px-8 overflow-hidden">

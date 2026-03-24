@@ -1,5 +1,6 @@
 package com.example.Security;
 
+import com.example.Exception.JwtTokenException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -16,6 +17,7 @@ import java.util.Map;
 
 /**
  * JwtTokenProvider - Handles JWT token creation, validation, and parsing
+ * Uses HS512 signature algorithm with 512-bit secret key
  */
 @Component
 @Slf4j
@@ -27,20 +29,25 @@ public class JwtTokenProvider {
     @Value("${jwt.expiration:86400000}") // 24 hours in milliseconds
     private long jwtExpiration;
 
+    /**
+     * Get properly formatted signing key
+     * Ensures key is at least 64 bytes (512 bits) for HS512
+     */
     private SecretKey getSigningKey() {
-        // Ensure key is at least 64 bytes (512 bits) for HS512
         byte[] keyBytes = jwtSecret.getBytes();
         if (keyBytes.length < 64) {
-            // Pad the key if it's too short
+            // Pad the key if it's too short (not recommended for production)
             byte[] paddedKey = new byte[64];
             System.arraycopy(keyBytes, 0, paddedKey, 0, keyBytes.length);
             keyBytes = paddedKey;
+            log.warn("JWT secret key is shorter than recommended 512 bits");
         }
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
     /**
      * Generate JWT token with user claims
+     * Standard login token with 24-hour expiration
      */
     public String generateToken(String userId, String email, String role) {
         Map<String, Object> claims = new HashMap<>();
@@ -51,49 +58,70 @@ public class JwtTokenProvider {
 
     /**
      * Generate email verification token (shorter expiration)
+     * Used for email verification process
      */
     public String generateVerificationToken(String email) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("type", "EMAIL_VERIFICATION");
         claims.put("email", email);
 
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(email)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 24 hours
-                .signWith(getSigningKey(), SignatureAlgorithm.HS512)
-                .compact();
+        try {
+            return Jwts.builder()
+                    .setClaims(claims)
+                    .setSubject(email)
+                    .setIssuedAt(new Date())
+                    .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 24 hours
+                    .signWith(getSigningKey(), SignatureAlgorithm.HS512)
+                    .compact();
+        } catch (Exception e) {
+            log.error("Failed to generate verification token", e);
+            throw new JwtTokenException("Failed to generate verification token", e);
+        }
     }
 
     /**
      * Generate password reset token
+     * Short-lived token (1 hour expiration)
      */
     public String generatePasswordResetToken(String userId) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("type", "PASSWORD_RESET");
 
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(userId)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 3600000)) // 1 hour
-                .signWith(getSigningKey(), SignatureAlgorithm.HS512)
-                .compact();
+        try {
+            return Jwts.builder()
+                    .setClaims(claims)
+                    .setSubject(userId)
+                    .setIssuedAt(new Date())
+                    .setExpiration(new Date(System.currentTimeMillis() + 3600000)) // 1 hour
+                    .signWith(getSigningKey(), SignatureAlgorithm.HS512)
+                    .compact();
+        } catch (Exception e) {
+            log.error("Failed to generate password reset token", e);
+            throw new JwtTokenException("Failed to generate password reset token", e);
+        }
     }
 
+    /**
+     * Create token with claims and subject
+     */
     private String createToken(Map<String, Object> claims, String subject) {
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(subject)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS512)
-                .compact();
+        try {
+            return Jwts.builder()
+                    .setClaims(claims)
+                    .setSubject(subject)
+                    .setIssuedAt(new Date(System.currentTimeMillis()))
+                    .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                    .signWith(getSigningKey(), SignatureAlgorithm.HS512)
+                    .compact();
+        } catch (Exception e) {
+            log.error("Failed to create JWT token", e);
+            throw new JwtTokenException("Failed to create JWT token", e);
+        }
     }
 
     /**
      * Validate JWT token
+     * Returns true if token is valid and not expired
      */
     public boolean validateToken(String token) {
         try {
@@ -101,9 +129,16 @@ public class JwtTokenProvider {
                     .setSigningKey(getSigningKey())
                     .build()
                     .parseClaimsJws(token);
+            log.debug("JWT token validation successful");
             return true;
-        } catch (JwtException | IllegalArgumentException e) {
-            log.error("JWT token validation failed: {}", e.getMessage());
+        } catch (JwtException e) {
+            log.warn("JWT token validation failed: {}", e.getMessage());
+            return false;
+        } catch (IllegalArgumentException e) {
+            log.warn("JWT token validation failed - illegal argument: {}", e.getMessage());
+            return false;
+        } catch (Exception e) {
+            log.warn("JWT token validation failed: {}", e.getMessage());
             return false;
         }
     }
@@ -112,24 +147,39 @@ public class JwtTokenProvider {
      * Extract user ID from token
      */
     public String getUserIdFromToken(String token) {
-        Claims claims = getAllClaimsFromToken(token);
-        return claims.getSubject();
+        try {
+            Claims claims = getAllClaimsFromToken(token);
+            return claims.getSubject();
+        } catch (Exception e) {
+            log.error("Failed to extract userId from token", e);
+            throw new JwtTokenException("Failed to extract userId from token", e);
+        }
     }
 
     /**
      * Extract email from token
      */
     public String getEmailFromToken(String token) {
-        Claims claims = getAllClaimsFromToken(token);
-        return (String) claims.get("email");
+        try {
+            Claims claims = getAllClaimsFromToken(token);
+            return (String) claims.get("email");
+        } catch (Exception e) {
+            log.error("Failed to extract email from token", e);
+            throw new JwtTokenException("Failed to extract email from token", e);
+        }
     }
 
     /**
      * Extract role from token
      */
     public String getRoleFromToken(String token) {
-        Claims claims = getAllClaimsFromToken(token);
-        return (String) claims.get("role");
+        try {
+            Claims claims = getAllClaimsFromToken(token);
+            return (String) claims.get("role");
+        } catch (Exception e) {
+            log.error("Failed to extract role from token", e);
+            throw new JwtTokenException("Failed to extract role from token", e);
+        }
     }
 
     /**
@@ -140,15 +190,24 @@ public class JwtTokenProvider {
             Claims claims = getAllClaimsFromToken(token);
             return claims.getExpiration().before(new Date());
         } catch (Exception e) {
-            return true;
+            log.warn("Error checking token expiration: {}", e.getMessage());
+            return true; // Treat as expired if we can't verify
         }
     }
 
+    /**
+     * Extract all claims from token
+     */
     private Claims getAllClaimsFromToken(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(getSigningKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (Exception e) {
+            log.error("Failed to extract claims from token", e);
+            throw new JwtTokenException("Failed to extract claims from token", e);
+        }
     }
 }

@@ -41,7 +41,7 @@ export default function AdminDashboardPage() {
               >
                 ← Back to Home
               </button>
-              <h1 className="text-2xl font-bold text-green-600">AgriBuy</h1>
+              <h1 className="text-2xl font-bold text-green-600">FarmFlex</h1>
               <span className="text-gray-600">Admin Panel</span>
             </div>
             <div className="flex items-center space-x-4">
