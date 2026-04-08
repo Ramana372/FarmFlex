@@ -44,4 +44,8 @@ public interface ListingRepository extends JpaRepository<Listing, Long> {
     // Count statistics
     long countByStatus(Listing.ListingStatus status);
     long countByOwnerAndStatus(User owner, Listing.ListingStatus status);
+    
+    // Get all publicly available listings (LIVE or APPROVED from database)
+    @Query(value = "SELECT * FROM listings WHERE status IN ('LIVE', 'APPROVED')", nativeQuery = true)
+    List<Listing> findAllPublicListings();
 }

@@ -69,14 +69,23 @@ public class ListingService {
      * Get all live (approved) listings for public marketplace
      */
     public List<Listing> getLiveListings() {
-        return listingRepository.findByStatus(Listing.ListingStatus.LIVE);
+        // Get all publicly available listings (either APPROVED or LIVE status)
+        List<Listing> listings = new ArrayList<>();
+        listings.addAll(listingRepository.findByStatus(Listing.ListingStatus.APPROVED));
+        listings.addAll(listingRepository.findByStatus(Listing.ListingStatus.LIVE));
+        return listings;
     }
 
     /**
      * Get a specific live listing by ID
      */
     public Optional<Listing> getLiveListingById(Long listingId) {
-        return listingRepository.findByIdAndStatus(listingId, Listing.ListingStatus.LIVE);
+        // Check for both APPROVED and LIVE statuses
+        Optional<Listing> listing = listingRepository.findByIdAndStatus(listingId, Listing.ListingStatus.LIVE);
+        if (listing.isEmpty()) {
+            listing = listingRepository.findByIdAndStatus(listingId, Listing.ListingStatus.APPROVED);
+        }
+        return listing;
     }
 
     /**

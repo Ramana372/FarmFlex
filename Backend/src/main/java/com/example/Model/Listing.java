@@ -82,6 +82,7 @@ public class Listing {
 
     public enum ListingStatus {
         PENDING,
+        APPROVED,
         LIVE,
         REJECTED,
         SOLD,
