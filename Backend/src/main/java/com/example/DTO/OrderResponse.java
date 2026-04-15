@@ -3,10 +3,6 @@ package com.example.DTO;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
-/**
- * DTO for order responses
- */
 public class OrderResponse {
 
     private Long id;
@@ -18,8 +14,6 @@ public class OrderResponse {
     private LocalDate rentStartDate;
     private LocalDate rentEndDate;
     private LocalDateTime createdAt;
-
-    // Constructors
     public OrderResponse() {}
 
     public OrderResponse(Long id, UserResponse buyer, ListingResponse listing, BigDecimal amount,
@@ -35,8 +29,6 @@ public class OrderResponse {
         this.rentEndDate = rentEndDate;
         this.createdAt = createdAt;
     }
-
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

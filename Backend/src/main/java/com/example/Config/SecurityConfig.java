@@ -21,9 +21,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
-/**
- * SecurityConfig - Configures Spring Security with JWT and CORS for React frontend
- */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity

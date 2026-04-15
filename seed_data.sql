@@ -2,36 +2,34 @@
 -- FARMFLEX SEED DATA - Sample Listings & Products
 -- ============================================================
 
--- 1. INSERT SAMPLE USERS (Farmers & Buyers)
-INSERT INTO users (id, name, email, phone, location, password, role, email_verified, created_at) VALUES
-(1, 'Rajesh Patel', 'rajesh@example.com', '9876543210', 'Maharashtra', '$2a$10$8f5e1c3b2a9d8e7f4c3b2a9d8e7f4c3b2a9d8e7f4c3b2a9d8e7f', 'FARMER', true, NOW()),
-(2, 'Priya Singh', 'priya@example.com', '9876543211', 'Punjab', '$2a$10$8f5e1c3b2a9d8e7f4c3b2a9d8e7f4c3b2a9d8e7f4c3b2a9d8e7f', 'FARMER', true, NOW()),
-(3, 'Ramesh Kumar', 'ramesh@example.com', '9876543212', 'Haryana', '$2a$10$8f5e1c3b2a9d8e7f4c3b2a9d8e7f4c3b2a9d8e7f4c3b2a9d8e7f', 'FARMER', true, NOW()),
-(4, 'Sunita Gupta', 'sunita@example.com', '9876543213', 'Uttar Pradesh', '$2a$10$8f5e1c3b2a9d8e7f4c3b2a9d8e7f4c3b2a9d8e7f4c3b2a9d8e7f', 'FARMER', true, NOW()),
-(5, 'Amit Verma', 'amit@example.com', '9876543214', 'Karnataka', '$2a$10$8f5e1c3b2a9d8e7f4c3b2a9d8e7f4c3b2a9d8e7f4c3b2a9d8e7f', 'BUYER', true, NOW()),
-(6, 'Neha Sharma', 'neha@example.com', '9876543215', 'Delhi', '$2a$10$8f5e1c3b2a9d8e7f4c3b2a9d8e7f4c3b2a9d8e7f4c3b2a9d8e7f', 'BUYER', true, NOW());
+-- 0. CLEAN UP EXISTING TEST DATA (respecting FK constraints)
+DELETE FROM listing_images WHERE listing_id >= 100;
+DELETE FROM listings WHERE id >= 100;
 
--- 2. INSERT SAMPLE LISTINGS (For Sale)
+-- 1. NOTE: Using existing users (IDs 1-5) from database, not creating new ones
+-- Users already exist: ID 1-5 are FARMER/BUYER accounts from initial setup
+
+-- 2. INSERT SAMPLE LISTINGS (For Sale) - Using high IDs to avoid conflicts, referencing existing users (IDs 1-5)
 INSERT INTO listings (id, owner_id, title, description, category, type, status, sale_price, location, created_at) VALUES
-(1, 1, 'Premium Quality Wheat', 'High-quality wheat grown with organic farming methods. Suitable for commercial grain mills.', 'GRAINS', 'SALE', 'APPROVED', 2500.00, 'Maharashtra', NOW()),
-(2, 2, 'Fresh Organic Vegetables Bundle', 'Mixed bundle of fresh vegetables - tomatoes, potatoes, onions, carrots. Harvested daily.', 'VEGETABLES', 'SALE', 'APPROVED', 1500.00, 'Punjab', NOW()),
-(3, 3, 'John Deere Tractor', 'John Deere Tractor in excellent condition. Recently serviced. Complete with implements.', 'EQUIPMENT', 'RENT', 'APPROVED', 5000.00, 'Haryana', NOW()),
-(4, 1, 'Sugarcane - Bulk Quantity', 'Fresh sugarcane for processing or direct consumption. Sweet variety. Bulk orders welcomed.', 'GRAINS', 'SALE', 'APPROVED', 3500.00, 'Maharashtra', NOW()),
-(5, 4, 'Hydraulic Press Machine', 'Industrial hydraulic press for oil extraction. Well-maintained, ready for immediate use.', 'EQUIPMENT', 'RENT', 'APPROVED', 8000.00, 'Uttar Pradesh', NOW()),
-(6, 2, 'Chicken Layer Birds', 'High-yield layer birds for poultry farming. Healthy birds, good feather condition. Min order 50.', 'LIVESTOCK', 'SALE', 'APPROVED', 800.00, 'Punjab', NOW()),
-(7, 3, 'Maize Seeds - Hybrid Variety', 'Premium hybrid maize seeds with 95% germination rate. Certified and tested.', 'SEEDS', 'SALE', 'APPROVED', 1200.00, 'Haryana', NOW()),
-(8, 1, 'Cotton Bales - Grade A', 'Premium grade cotton bales, bleached and cleaned. Ready for textile industry.', 'GRAINS', 'SALE', 'APPROVED', 4500.00, 'Maharashtra', NOW());
+(100, 1, 'Premium Quality Wheat', 'High-quality wheat grown with organic farming methods. Suitable for commercial grain mills.', 'GRAINS', 'SALE', 'APPROVED', 2500.00, 'Maharashtra', NOW()),
+(101, 2, 'Fresh Organic Vegetables Bundle', 'Mixed bundle of fresh vegetables - tomatoes, potatoes, onions, carrots. Harvested daily.', 'VEGETABLES', 'SALE', 'APPROVED', 1500.00, 'Punjab', NOW()),
+(102, 3, 'John Deere Tractor', 'John Deere Tractor in excellent condition. Recently serviced. Complete with implements.', 'EQUIPMENT', 'RENT', 'APPROVED', 5000.00, 'Haryana', NOW()),
+(103, 1, 'Sugarcane - Bulk Quantity', 'Fresh sugarcane for processing or direct consumption. Sweet variety. Bulk orders welcomed.', 'GRAINS', 'SALE', 'APPROVED', 3500.00, 'Maharashtra', NOW()),
+(104, 4, 'Hydraulic Press Machine', 'Industrial hydraulic press for oil extraction. Well-maintained, ready for immediate use.', 'EQUIPMENT', 'RENT', 'APPROVED', 8000.00, 'Uttar Pradesh', NOW()),
+(105, 2, 'Chicken Layer Birds', 'High-yield layer birds for poultry farming. Healthy birds, good feather condition. Min order 50.', 'LIVESTOCK', 'SALE', 'APPROVED', 800.00, 'Punjab', NOW()),
+(106, 3, 'Maize Seeds - Hybrid Variety', 'Premium hybrid maize seeds with 95% germination rate. Certified and tested.', 'SEEDS', 'SALE', 'APPROVED', 1200.00, 'Haryana', NOW()),
+(107, 1, 'Cotton Bales - Grade A', 'Premium grade cotton bales, bleached and cleaned. Ready for textile industry.', 'GRAINS', 'SALE', 'APPROVED', 4500.00, 'Maharashtra', NOW());
 
 -- 3. INSERT LISTING IMAGES
 INSERT INTO listing_images (listing_id, image_url) VALUES
-(1, '/api/images/wheat-1.jpg'),
-(2, '/api/images/vegetables-1.jpg'),
-(3, '/api/images/tractor-1.jpg'),
-(4, '/api/images/sugarcane-1.jpg'),
-(5, '/api/images/press-1.jpg'),
-(6, '/api/images/chicken-1.jpg'),
-(7, '/api/images/seeds-1.jpg'),
-(8, '/api/images/cotton-1.jpg');
+(100, '/uploads/images/Advanced Crop Sprayer.jpg'),
+(101, '/uploads/images/John Deere Tractor 53.avif'),
+(102, '/uploads/images/Mahindra_Harvester_PRO.jpg'),
+(103, '/uploads/images/Sonalika DI 60 Tractor.webp'),
+(104, '/uploads/images/Used Agricultural Plough.webp'),
+(105, '/uploads/images/Electric Seeder Machine.jpg'),
+(106, '/uploads/images/Advanced Crop Sprayer.jpg'),
+(107, '/uploads/images/Electric Seeder Machine.jpg');
 
 -- 4. INSERT SAMPLE FAVORIES
 -- These will be added by users as they browse

@@ -26,29 +26,21 @@ public class JwtTokenProvider {
     @Value("${jwt.secret:agrimart-secret-key-for-jwt-authentication-2024-agrimart-secure-key-12345}")
     private String jwtSecret;
 
-    @Value("${jwt.expiration:86400000}") // 24 hours in milliseconds
+    @Value("${jwt.expiration:86400000}")
     private long jwtExpiration;
 
-    /**
-     * Get properly formatted signing key
-     * Ensures key is at least 64 bytes (512 bits) for HS512
-     */
     private SecretKey getSigningKey() {
         byte[] keyBytes = jwtSecret.getBytes();
         if (keyBytes.length < 64) {
-            // Pad the key if it's too short (not recommended for production)
+            log.warn("JWT secret key is shorter than recommended 512 bits (needed: 64 bytes, actual: {} bytes). Consider using a stronger secret.", keyBytes.length);
             byte[] paddedKey = new byte[64];
             System.arraycopy(keyBytes, 0, paddedKey, 0, keyBytes.length);
             keyBytes = paddedKey;
-            log.warn("JWT secret key is shorter than recommended 512 bits");
+        } else {
+            log.debug("JWT secret key length: {} bytes ({} bits) - HS512 requirement met", keyBytes.length, keyBytes.length * 8);
         }
         return Keys.hmacShaKeyFor(keyBytes);
     }
-
-    /**
-     * Generate JWT token with user claims
-     * Standard login token with 24-hour expiration
-     */
     public String generateToken(String userId, String email, String role) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("email", email);
@@ -56,10 +48,6 @@ public class JwtTokenProvider {
         return createToken(claims, userId);
     }
 
-    /**
-     * Generate email verification token (shorter expiration)
-     * Used for email verification process
-     */
     public String generateVerificationToken(String email) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("type", "EMAIL_VERIFICATION");
@@ -79,10 +67,6 @@ public class JwtTokenProvider {
         }
     }
 
-    /**
-     * Generate password reset token
-     * Short-lived token (1 hour expiration)
-     */
     public String generatePasswordResetToken(String userId) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("type", "PASSWORD_RESET");
@@ -92,7 +76,7 @@ public class JwtTokenProvider {
                     .setClaims(claims)
                     .setSubject(userId)
                     .setIssuedAt(new Date())
-                    .setExpiration(new Date(System.currentTimeMillis() + 3600000)) // 1 hour
+                    .setExpiration(new Date(System.currentTimeMillis() + 3600000))
                     .signWith(getSigningKey(), SignatureAlgorithm.HS512)
                     .compact();
         } catch (Exception e) {
@@ -100,10 +84,6 @@ public class JwtTokenProvider {
             throw new JwtTokenException("Failed to generate password reset token", e);
         }
     }
-
-    /**
-     * Create token with claims and subject
-     */
     private String createToken(Map<String, Object> claims, String subject) {
         try {
             return Jwts.builder()
@@ -119,10 +99,6 @@ public class JwtTokenProvider {
         }
     }
 
-    /**
-     * Validate JWT token
-     * Returns true if token is valid and not expired
-     */
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
@@ -131,6 +107,10 @@ public class JwtTokenProvider {
                     .parseClaimsJws(token);
             log.debug("JWT token validation successful");
             return true;
+        } catch (io.jsonwebtoken.ExpiredJwtException e) {
+            log.warn("JWT token has expired - issued at: {}, expires at: {}, current time: {}", 
+                e.getClaims().getIssuedAt(), e.getClaims().getExpiration(), new Date());
+            return false;
         } catch (JwtException e) {
             log.warn("JWT token validation failed: {}", e.getMessage());
             return false;
@@ -143,9 +123,6 @@ public class JwtTokenProvider {
         }
     }
 
-    /**
-     * Extract user ID from token
-     */
     public String getUserIdFromToken(String token) {
         try {
             Claims claims = getAllClaimsFromToken(token);
@@ -156,9 +133,6 @@ public class JwtTokenProvider {
         }
     }
 
-    /**
-     * Extract email from token
-     */
     public String getEmailFromToken(String token) {
         try {
             Claims claims = getAllClaimsFromToken(token);
@@ -169,9 +143,6 @@ public class JwtTokenProvider {
         }
     }
 
-    /**
-     * Extract role from token
-     */
     public String getRoleFromToken(String token) {
         try {
             Claims claims = getAllClaimsFromToken(token);
@@ -182,16 +153,41 @@ public class JwtTokenProvider {
         }
     }
 
-    /**
-     * Check if token is expired
-     */
     public boolean isTokenExpired(String token) {
         try {
             Claims claims = getAllClaimsFromToken(token);
-            return claims.getExpiration().before(new Date());
+            Date expiration = claims.getExpiration();
+            Date currentTime = new Date();
+            boolean isExpired = expiration.before(currentTime);
+            
+            if (isExpired) {
+                long expirationDiff = currentTime.getTime() - expiration.getTime();
+                log.debug("Token expired {} milliseconds ({} seconds) ago", expirationDiff, expirationDiff / 1000);
+            }
+            return isExpired;
         } catch (Exception e) {
             log.warn("Error checking token expiration: {}", e.getMessage());
             return true; // Treat as expired if we can't verify
+        }
+    }
+
+    /**
+     * Get token debug info for troubleshooting expiration issues
+     */
+    public String getTokenDebugInfo(String token) {
+        try {
+            Claims claims = getAllClaimsFromToken(token);
+            Date issuedAt = claims.getIssuedAt();
+            Date expiration = claims.getExpiration();
+            Date currentTime = new Date();
+            long tokenAge = currentTime.getTime() - issuedAt.getTime();
+            long timeUntilExpiration = expiration.getTime() - currentTime.getTime();
+            
+            return String.format(
+                "Token Debug: Issued at %s, Expires at %s, Current time %s, Age: %d ms, TTL: %d ms", 
+                issuedAt, expiration, currentTime, tokenAge, timeUntilExpiration);
+        } catch (Exception e) {
+            return "Token Debug Error: " + e.getMessage();
         }
     }
 

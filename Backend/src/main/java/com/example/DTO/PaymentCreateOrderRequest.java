@@ -3,10 +3,6 @@ package com.example.DTO;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
-
-/**
- * DTO for creating a payment order
- */
 public class PaymentCreateOrderRequest {
 
     @NotNull(message = "Listing ID is required")
@@ -16,7 +12,6 @@ public class PaymentCreateOrderRequest {
 
     private LocalDate rentEndDate;
 
-    // Getters and Setters
     public Long getListingId() { return listingId; }
     public void setListingId(Long listingId) { this.listingId = listingId; }
 

@@ -8,22 +8,11 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.Executor;
 
-/**
- * AsyncConfig - Configures asynchronous task execution for email sending
- * This ensures email operations don't block the main authentication flow
- */
 @Configuration
 @EnableAsync
 @Slf4j
 public class AsyncConfig {
 
-    /**
-     * Configure thread pool for async email operations
-     * Core pool: 2 threads
-     * Max pool: 5 threads
-     * Queue capacity: 100
-     * Thread name prefix: farmflex-async-
-     */
     @Bean(name = "taskExecutor")
     public Executor taskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();

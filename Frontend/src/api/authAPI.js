@@ -1,6 +1,5 @@
 import apiClient from './apiClient';
 
-// Authentication API calls
 export const authAPI = {
   register: (payload) => 
     apiClient.post('/auth/register', payload),
@@ -18,7 +17,6 @@ export const authAPI = {
     apiClient.post('/auth/forgot-password', { email }),
 };
 
-// Admin API calls
 export const adminAPI = {
   getDashboard: () => 
     apiClient.get('/admin/dashboard'),
@@ -42,7 +40,6 @@ export const adminAPI = {
     apiClient.get(`/admin/farmers/${farmerId}/listings`),
 };
 
-// Listing API calls
 export const listingsAPI = {
   getLive: (params) => apiClient.get('/listings', { params }),
   getById: (id) => apiClient.get(`/listings/${id}`),
@@ -52,12 +49,10 @@ export const listingsAPI = {
   getMyGrouped: () => apiClient.get('/listings/my')
 };
 
-// Orders API calls
 export const ordersAPI = {
   getMyOrders: () => apiClient.get('/orders/my')
 };
 
-// Payments API calls
 export const paymentsAPI = {
   createOrder: (payload) => apiClient.post('/payments/create-order', payload),
   confirmPayment: (payload) => apiClient.post('/payments/confirm', payload)

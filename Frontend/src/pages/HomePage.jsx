@@ -9,13 +9,10 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      {/* Navigation */}
       <Navigation />
 
-      {/* Hero Section */}
       <section className="flex-1 bg-gradient-to-br from-green-50 via-blue-50 to-indigo-100 py-24 px-4 md:px-8">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          {/* Left Content */}
           <div className="space-y-8">
             <div className="space-y-4">
               <div className="inline-block bg-green-100 px-4 py-2 rounded-full">
@@ -30,7 +27,6 @@ export default function HomePage() {
               </p>
             </div>
 
-            {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
               {!user ? (
                 <>
@@ -57,7 +53,6 @@ export default function HomePage() {
               )}
             </div>
 
-            {/* Stats */}
             <div className="grid grid-cols-3 gap-6 pt-8 border-t border-green-200">
               <div className="bg-green-50 rounded-lg p-4">
                 <p className="text-3xl font-bold text-green-600">500+</p>
@@ -74,7 +69,6 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Right Visual */}
           <div className="hidden lg:flex items-center justify-center">
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-green-200 to-blue-200 rounded-3xl blur-3xl opacity-40"></div>
@@ -97,7 +91,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features Section */}
       <section className="bg-gradient-to-b from-green-50 to-white py-20 px-4 md:px-8 border-b border-green-100">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
@@ -148,7 +141,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* How It Works */}
       <section className="bg-blue-50 py-20 px-4 md:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
@@ -175,7 +167,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Categories Section */}
       <section className="bg-white py-20 px-4 md:px-8 border-b border-gray-200">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
@@ -207,9 +198,7 @@ export default function HomePage() {
 
 
 
-      {/* CTA Section */}
       <section className="relative bg-gradient-to-br from-blue-600 via-green-300 to-emerald-700 py-24 px-4 md:px-8 overflow-hidden">
-        {/* Background decorative elements */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
           <div className="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
@@ -251,7 +240,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Footer */}
       <Footer />
     </div>
   );

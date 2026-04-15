@@ -23,7 +23,6 @@ export default function Navigation() {
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-3 flex justify-between items-center">
-        {/* Logo & Brand */}
         <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition">
           <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-md">
             <span className="text-lg font-bold text-white">⚡</span>
@@ -34,7 +33,6 @@ export default function Navigation() {
           </div>
         </Link>
 
-        {/* Desktop Navigation */}
         <div className="hidden md:flex gap-8 items-center">
           <Link to="/" className={`py-2 transition ${isActive('/')}`}>Home</Link>
           <Link to="/marketplace" className={`py-2 transition ${isActive('/marketplace')}`}>Marketplace</Link>
@@ -68,7 +66,6 @@ export default function Navigation() {
           )}
         </div>
 
-        {/* Right Side - Auth & User Menu */}
         <div className="flex gap-3 items-center">
           {user ? (
             <div className="hidden md:flex items-center gap-3">

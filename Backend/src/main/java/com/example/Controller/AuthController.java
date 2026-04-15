@@ -23,9 +23,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-/**
- * AuthController - Handles user registration, login, and email verification
- */
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -38,18 +35,13 @@ public class AuthController {
     private final JwtTokenProvider jwtTokenProvider;
     private final EmailService emailService;
 
-    /**
-     * Register new user (Farmer or Admin)
-     */
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
         try {
-            // Check if user already exists
             if (userRepository.findByEmail(request.getEmail()).isPresent()) {
                 return ResponseEntity.badRequest().body(Map.of("error", "Email already registered"));
             }
 
-            // Create new user
             User user = new User();
             user.setName(request.getName());
             user.setEmail(request.getEmail());
@@ -64,15 +56,14 @@ public class AuthController {
             } catch (IllegalArgumentException ex) {
                 return ResponseEntity.badRequest().body(Map.of("error", "Invalid role"));
             }
-            user.setRole(role); // FARMER or ADMIN
-            user.setEmailVerified(true); // Auto-verify email - no verification needed
+            user.setRole(role);
+            user.setEmailVerified(true);
             user.setCreatedAt(LocalDateTime.now());
             user.setUpdatedAt(LocalDateTime.now());
 
             User savedUser = userRepository.save(user);
             log.info("New user registered: {} with email: {}", user.getName(), user.getEmail());
 
-            // Generate JWT token for immediate login
             String token = jwtTokenProvider.generateToken(
                     savedUser.getId().toString(),
                     savedUser.getEmail(),
@@ -97,14 +88,9 @@ public class AuthController {
         }
     }
 
-    /**
-     * Login user and return JWT token
-     * Sends asynchronous login notification email on successful authentication
-     */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletRequest httpRequest) {
         try {
-            // Find user by email
             Optional<User> userOpt = userRepository.findByEmail(request.getEmail());
             if (userOpt.isEmpty()) {
                 log.warn("Login attempt with non-existent email: {}", request.getEmail());
@@ -114,14 +100,12 @@ public class AuthController {
 
             User user = userOpt.get();
 
-            // Verify password
             if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
                 log.warn("Failed login attempt for user: {}", request.getEmail());
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body(Map.of("error", "Invalid email or password"));
             }
 
-            // Generate JWT token
             String token = jwtTokenProvider.generateToken(
                     user.getId().toString(),
                     user.getEmail(),
@@ -130,11 +114,9 @@ public class AuthController {
 
             log.info("User logged in successfully: {} ({})", user.getName(), user.getRole());
 
-            // Extract IP address and user agent for email notification
             String clientIp = RequestUtil.getClientIpAddress(httpRequest);
             String userAgent = RequestUtil.getUserAgent(httpRequest);
 
-            // Send login notification email asynchronously (non-blocking)
             try {
                 emailService.sendLoginNotificationEmail(
                         user.getEmail(),
@@ -144,7 +126,6 @@ public class AuthController {
                 );
                 log.debug("Login notification email queued for: {}", user.getEmail());
             } catch (Exception e) {
-                // Log the error but don't break the login flow
                 log.warn("Failed to queue login notification email for: {} - {}", user.getEmail(), e.getMessage());
             }
 
@@ -165,9 +146,6 @@ public class AuthController {
         }
     }
 
-    /**
-     * Verify email using token
-     */
     @GetMapping("/verify-email")
     public ResponseEntity<?> verifyEmail(@RequestParam String token) {
         try {
@@ -179,12 +157,10 @@ public class AuthController {
 
             User user = userOpt.get();
 
-            // Check if token is expired
             if (user.getEmailVerificationTokenExpiry().isBefore(LocalDateTime.now())) {
                 return ResponseEntity.badRequest().body(Map.of("error", "Verification token has expired"));
             }
 
-            // Mark email as verified
             user.setEmailVerified(true);
             user.setEmailVerificationToken(null);
             user.setEmailVerificationTokenExpiry(null);
@@ -192,7 +168,6 @@ public class AuthController {
 
             log.info("Email verified for user: {}", user.getName());
 
-            // Send welcome email
             try {
                 emailService.sendWelcomeEmail(user.getEmail(), user.getName(), user.getRole().toString());
             } catch (Exception e) {
@@ -207,9 +182,6 @@ public class AuthController {
         }
     }
 
-    /**
-     * Resend verification email
-     */
     @PostMapping("/resend-verification")
     public ResponseEntity<?> resendVerification(@RequestBody ResendVerificationRequest request) {
         try {
@@ -225,13 +197,11 @@ public class AuthController {
                 return ResponseEntity.badRequest().body(Map.of("error", "Email already verified"));
             }
 
-            // Generate new verification token
             String verificationToken = UUID.randomUUID().toString();
             user.setEmailVerificationToken(verificationToken);
             user.setEmailVerificationTokenExpiry(LocalDateTime.now().plusHours(24));
             userRepository.save(user);
 
-            // Send verification email
             emailService.sendVerificationEmail(user.getEmail(), user.getName(), verificationToken);
 
             log.info("Verification email resent to: {}", user.getEmail());
@@ -244,24 +214,18 @@ public class AuthController {
         }
     }
 
-    /**
-     * Forgot password - send reset link
-     */
     @PostMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest request) {
         try {
             Optional<User> userOpt = userRepository.findByEmail(request.getEmail());
 
             if (userOpt.isEmpty()) {
-                // Don't reveal if email exists or not (security best practice)
                 return ResponseEntity.ok(Map.of("message", "If email exists, password reset link has been sent"));
             }
 
             User user = userOpt.get();
             String resetToken = jwtTokenProvider.generatePasswordResetToken(user.getId().toString());
 
-            // In a real application, you would store this token in the database
-            // For now, we'll send it via email and validate it based on JWT signature
             emailService.sendPasswordResetEmail(user.getEmail(), user.getName(), resetToken);
 
             log.info("Password reset email sent to: {}", user.getEmail());
@@ -274,7 +238,6 @@ public class AuthController {
         }
     }
 
-    // DTO Classes
     public static class RegisterRequest {
         @NotBlank
         @Size(min = 2, max = 120)
@@ -294,7 +257,7 @@ public class AuthController {
         @NotBlank
         public String location;
 
-        public String role; // FARMER or ADMIN
+        public String role;
 
         public String getName() { return name; }
         public String getEmail() { return email; }

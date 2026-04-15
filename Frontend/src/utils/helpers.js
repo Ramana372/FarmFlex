@@ -2,9 +2,7 @@
  * Utility functions for AgriBuy frontend
  */
 
-// Price and currency utilities
 export const priceUtils = {
-  // Format price to INR currency
   formatPrice: (price) => {
     if (!price) return '₹0';
     return `₹${Number(price).toLocaleString('en-IN', { 

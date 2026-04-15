@@ -4,6 +4,7 @@ import com.example.DTO.RejectListingRequest;
 import com.example.Model.Listing;
 import com.example.Model.User;
 import com.example.Repo.UserRepo;
+import com.example.Repo.ListingRepository;
 import com.example.Service.ListingService;
 import com.example.Service.EmailService;
 import lombok.RequiredArgsConstructor;
@@ -17,10 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * AdminController - Admin panel endpoints for approving listings and managing users
- * All endpoints require ADMIN role
- */
 @RestController
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
@@ -30,11 +27,8 @@ public class AdminController {
 
     private final ListingService listingService;
     private final UserRepo userRepository;
+    private final ListingRepository listingRepository;
     private final EmailService emailService;
-
-    /**
-     * Get admin dashboard statistics
-     */
     @GetMapping("/dashboard")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getDashboardStats() {
@@ -58,9 +52,6 @@ public class AdminController {
         }
     }
 
-    /**
-     * Get all pending listing approvals
-     */
     @GetMapping("/listings/pending")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getPendingListings() {
@@ -78,9 +69,6 @@ public class AdminController {
         }
     }
 
-    /**
-     * Approve a pending listing - changes status from PENDING to LIVE
-     */
     @PostMapping("/listings/{listingId}/approve")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> approveListing(
@@ -89,7 +77,6 @@ public class AdminController {
         try {
             Listing listing = listingService.approveListing(listingId, adminId);
             
-            // Send approval email to farmer
             if (listing.getOwner() != null) {
                 emailService.sendListingStatusEmail(
                         listing.getOwner().getEmail(),
@@ -115,9 +102,6 @@ public class AdminController {
         }
     }
 
-    /**
-     * Reject a pending listing with reason - changes status from PENDING to REJECTED
-     */
     @PostMapping("/listings/{listingId}/reject")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> rejectListing(
@@ -127,7 +111,6 @@ public class AdminController {
         try {
             Listing listing = listingService.rejectListing(listingId, adminId, request.getReason());
             
-            // Send rejection email to farmer
             if (listing.getOwner() != null) {
                 emailService.sendListingStatusEmail(
                         listing.getOwner().getEmail(),
@@ -153,9 +136,6 @@ public class AdminController {
         }
     }
 
-    /**
-     * Get all farmers registered in the system
-     */
     @GetMapping("/farmers")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getAllFarmers() {
@@ -173,9 +153,6 @@ public class AdminController {
         }
     }
 
-    /**
-     * Get all live listings on marketplace
-     */
     @GetMapping("/listings")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getAllListings() {
@@ -193,9 +170,6 @@ public class AdminController {
         }
     }
 
-    /**
-     * Get all listings (live, pending, rejected) for a specific farmer
-     */
     @GetMapping("/farmers/{farmerId}/listings")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getFarmerListings(@PathVariable Long farmerId) {
@@ -228,9 +202,6 @@ public class AdminController {
         }
     }
 
-    /**
-     * Get all users in the system (farmers and admins)
-     */
     @GetMapping("/users")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getAllUsers() {
@@ -248,9 +219,6 @@ public class AdminController {
         }
     }
 
-    /**
-     * Get user details by ID (admin only)
-     */
     @GetMapping("/users/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getUserDetails(@PathVariable Long userId) {
@@ -271,6 +239,220 @@ public class AdminController {
             log.error("Error getting user details: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Failed to get user details"));
+        }
+    }
+
+    /**
+     * Admin endpoint to update images with exact matching based on titles
+     * Matches new images to existing listings by title
+     */
+    @PostMapping("/update-images-exact")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> updateImagesExactMatch() {
+        return performExactImageMatch();
+    }
+
+    /**
+     * Public endpoint for class project - update images with exact matching
+     * This allows updating images without admin authentication for demo purposes
+     */
+    @PostMapping("/update-images")
+    public ResponseEntity<?> updateImagesPublic() {
+        return performExactImageMatch();
+    }
+
+    private ResponseEntity<?> performExactImageMatch() {
+        try {
+            log.info("Starting exact image matching for all listings");
+            
+            int updatedCount = 0;
+            
+            // Get all listings
+            List<Listing> approvedListings = listingRepository.findByStatus(Listing.ListingStatus.APPROVED);
+            List<Listing> liveListings = listingRepository.findByStatus(Listing.ListingStatus.LIVE);
+            
+            java.util.List<Listing> allListings = new java.util.ArrayList<>();
+            allListings.addAll(approvedListings);
+            allListings.addAll(liveListings);
+            
+            // Define exact image mappings by title keywords and filename matching
+            java.util.Map<String, String> titleToImage = new java.util.HashMap<>();
+            
+            // Equipment with new versions - prioritize new ones
+            titleToImage.put("John Deere Tractor 5310F", "/uploads/images/John Deere Tractor 53 IOF.webp");
+            titleToImage.put("John Deere Tractor", "/uploads/images/John Deere Tractor 53 IOF.webp");
+            titleToImage.put("Mahindra Harvester PRO", "/uploads/images/Mahindra Harvester PRO.jpg");
+            titleToImage.put("Used Agricultural Plough", "/uploads/images/Used Agricultural Plough1.jpg");
+            titleToImage.put("Advanced Crop Sprayer", "/uploads/images/Advanced Crop Sprayer1.webp");
+            titleToImage.put("Electric Seeder Machine", "/uploads/images/Electric Seeder Machine1.jpg");
+            titleToImage.put("Sonalika DI 60 Tractor", "/uploads/images/Sonalika DI 60 Tractor.webp");
+            
+            // Product category mappings
+            titleToImage.put("Premium Quality Wheat", "/uploads/images/GRAINS.jpg");
+            titleToImage.put("Fresh Organic Vegetables", "/uploads/images/VEGETABLES.jpg");
+            titleToImage.put("Sugarcane", "/uploads/images/GRAINS.jpg");
+            titleToImage.put("Chicken Layer Birds", "/uploads/images/LIVESTOCK.jpg");
+            titleToImage.put("Maize Seeds", "/uploads/images/SEEDS.jpg");
+            titleToImage.put("Cotton Bales", "/uploads/images/GRAINS.jpg");
+            
+            // Process each listing
+            for (Listing listing : allListings) {
+                try {
+                    String imageUrl = null;
+                    String title = listing.getTitle();
+                    
+                    // Try exact title match first
+                    for (java.util.Map.Entry<String, String> entry : titleToImage.entrySet()) {
+                        if (title.contains(entry.getKey()) || entry.getKey().contains(title)) {
+                            imageUrl = entry.getValue();
+                            break;
+                        }
+                    }
+                    
+                    // If no exact match, try by category
+                    if (imageUrl == null && listing.getCategory() != null) {
+                        switch(listing.getCategory().name()) {
+                            case "GRAINS":
+                                imageUrl = "/uploads/images/GRAINS.jpg";
+                                break;
+                            case "VEGETABLES":
+                                imageUrl = "/uploads/images/VEGETABLES.jpg";
+                                break;
+                            case "SEEDS":
+                                imageUrl = "/uploads/images/SEEDS.jpg";
+                                break;
+                            case "LIVESTOCK":
+                                imageUrl = "/uploads/images/LIVESTOCK.jpg";
+                                break;
+                            case "TRACTOR":
+                                imageUrl = "/uploads/images/John Deere Tractor 53 IOF.webp";
+                                break;
+                            case "HARVESTER":
+                                imageUrl = "/uploads/images/Mahindra Harvester PRO.jpg";
+                                break;
+                            case "SPRAYER":
+                                imageUrl = "/uploads/images/Advanced Crop Sprayer1.webp";
+                                break;
+                            case "SEEDER":
+                                imageUrl = "/uploads/images/Electric Seeder Machine1.jpg";
+                                break;
+                            case "PLOUGH":
+                                imageUrl = "/uploads/images/Used Agricultural Plough1.jpg";
+                                break;
+                            default:
+                                imageUrl = "/uploads/images/GRAINS.jpg";
+                        }
+                    }
+                    
+                    if (imageUrl != null) {
+                        // Clear existing images and set new one
+                        listing.getImages().clear();
+                        listing.setImageUrls(List.of(imageUrl));
+                        listingRepository.save(listing);
+                        updatedCount++;
+                        log.info("Updated listing {} ({}) with image: {}", listing.getId(), title, imageUrl);
+                    }
+                } catch (Exception e) {
+                    log.warn("Failed to update image for listing {}: {}", listing.getId(), e.getMessage());
+                }
+            }
+            
+            log.info("Exact image matching completed: {} listings updated out of {}", updatedCount, allListings.size());
+            return ResponseEntity.ok(Map.of(
+                    "message", "Images updated successfully with exact matching",
+                    "updatedCount", updatedCount,
+                    "totalListings", allListings.size()
+            ));
+        } catch (Exception e) {
+            log.error("Error updating images with exact match: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to update images: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * Admin endpoint to populate images for all listings (for class project showcase)
+     * This helps display all products with proper images
+     */
+    @PostMapping("/populate-images")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> populateImages() {
+        try {
+            log.info("Starting image population for all listings");
+            
+            int successCount = 0;
+            
+            // Get all APPROVED and LIVE listings
+            List<Listing> approvedListings = listingRepository.findByStatus(Listing.ListingStatus.APPROVED);
+            List<Listing> liveListings = listingRepository.findByStatus(Listing.ListingStatus.LIVE);
+            
+            List<Listing> allListings = new java.util.ArrayList<>();
+            allListings.addAll(approvedListings);
+            allListings.addAll(liveListings);
+            
+            // Define image mapping
+            String[] equipmentImages = {
+                "/uploads/images/John Deere Tractor 53.avif",
+                "/uploads/images/Mahindra_Harvester_PRO.jpg",
+                "/uploads/images/Used Agricultural Plough.webp",
+                "/uploads/images/Sonalika DI 60 Tractor.webp",
+                "/uploads/images/Advanced Crop Sprayer.jpg",
+                "/uploads/images/Electric Seeder Machine.jpg"
+            };
+            
+            String[] categoryImages = {
+                "/uploads/images/GRAINS.jpg",
+                "/uploads/images/VEGETABLES.jpg",
+                "/uploads/images/SEEDS.jpg",
+                "/uploads/images/LIVESTOCK.jpg"
+            };
+            
+            // Apply images to listings
+            for (Listing listing : allListings) {
+                try {
+                    // Skip if already has images
+                    if (listing.getImageUrls() != null && !listing.getImageUrls().isEmpty()) {
+                        log.debug("Listing {} already has images, skipping", listing.getId());
+                        continue;
+                    }
+                    
+                    String imageUrl = null;
+                    
+                    // Try to match based on listing ID for specific equipment (IDs 2-7)
+                    if (listing.getId() >= 2 && listing.getId() <= 7) {
+                        int index = (int)(listing.getId() - 2);
+                        if (index < equipmentImages.length) {
+                            imageUrl = equipmentImages[index];
+                        }
+                    }
+                    
+                    // If no specific match, use category-based selection
+                    if (imageUrl == null && listing.getCategory() != null) {
+                        int categoryIndex = (int)(listing.getId() % categoryImages.length);
+                        imageUrl = categoryImages[categoryIndex];
+                    }
+                    
+                    if (imageUrl != null) {
+                        listing.setImageUrls(List.of(imageUrl));
+                        listingRepository.save(listing);
+                        successCount++;
+                        log.debug("Added image {} to listing {} ({})", imageUrl, listing.getId(), listing.getTitle());
+                    }
+                } catch (Exception e) {
+                    log.warn("Failed to add image to listing {}: {}", listing.getId(), e.getMessage());
+                }
+            }
+            
+            log.info("Image population completed: {} listings updated out of {}", successCount, allListings.size());
+            return ResponseEntity.ok(Map.of(
+                    "message", "Images populated successfully",
+                    "successCount", successCount,
+                    "totalListings", allListings.size()
+            ));
+        } catch (Exception e) {
+            log.error("Error populating images: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to populate images: " + e.getMessage()));
         }
     }
 }

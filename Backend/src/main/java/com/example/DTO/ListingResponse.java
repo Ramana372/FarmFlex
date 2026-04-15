@@ -3,10 +3,6 @@ package com.example.DTO;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-
-/**
- * DTO for listing responses
- */
 public class ListingResponse {
 
     private Long id;
@@ -46,8 +42,6 @@ public class ListingResponse {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
-
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

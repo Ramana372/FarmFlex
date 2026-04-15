@@ -16,18 +16,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * GlobalExceptionHandler - Centralized exception handling for the application
- * Provides consistent error responses across all REST endpoints
- */
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
 
-    /**
-     * Handle input validation errors (400 Bad Request)
-     */
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+@ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationExceptions(
             MethodArgumentNotValidException ex, WebRequest request) {
         
@@ -53,9 +46,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-    /**
-     * Handle authentication errors (401 Unauthorized)
-     */
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ErrorResponse> handleAuthenticationException(
             AuthenticationException ex, WebRequest request) {
@@ -74,9 +64,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
 
-    /**
-     * Handle bad credentials specifically
-     */
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorResponse> handleBadCredentialsException(
             BadCredentialsException ex, WebRequest request) {
@@ -95,9 +82,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
 
-    /**
-     * Handle duplicate email (409 Conflict)
-     */
     @ExceptionHandler(DuplicateEmailException.class)
     public ResponseEntity<ErrorResponse> handleDuplicateEmailException(
             DuplicateEmailException ex, WebRequest request) {
@@ -116,9 +100,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 
-    /**
-     * Handle user not found (404 Not Found)
-     */
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleUserNotFoundException(
             UserNotFoundException ex, WebRequest request) {
@@ -137,9 +118,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
-    /**
-     * Handle email sending failures (500 Internal Server Error - but don't break login)
-     */
     @ExceptionHandler(EmailSendingException.class)
     public ResponseEntity<ErrorResponse> handleEmailSendingException(
             EmailSendingException ex, WebRequest request) {
@@ -158,9 +136,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    /**
-     * Handle JWT token validation errors
-     */
     @ExceptionHandler(JwtTokenException.class)
     public ResponseEntity<ErrorResponse> handleJwtTokenException(
             JwtTokenException ex, WebRequest request) {
@@ -179,9 +154,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
 
-    /**
-     * Handle all other exceptions (500 Internal Server Error)
-     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGlobalException(
             Exception ex, WebRequest request) {
@@ -200,9 +172,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    /**
-     * Error response DTO with consistent structure
-     */
     public static class ErrorResponse {
         public LocalDateTime timestamp;
         public int status;

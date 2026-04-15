@@ -16,10 +16,6 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-/**
- * OrderService - Handles order creation, retrieval, and calculations
- * Manages both RENT orders (with dates) and SALE orders (one-time purchase)
- */
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -30,11 +26,6 @@ public class OrderService {
     private final ListingRepository listingRepository;
     private final UserRepo userRepository;
 
-    /**
-     * Create a new order after successful payment
-     * For RENT: listing status changes to BOOKED
-     * For SALE: listing status changes to SOLD
-     */
     public Order createOrder(Long buyerId,
                              Long listingId,
                              BigDecimal amount,
@@ -48,27 +39,22 @@ public class OrderService {
         Listing listing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new IllegalArgumentException("Listing not found"));
 
-        // Check if listing is available (LIVE status only)
         if (listing.getStatus() != Listing.ListingStatus.LIVE) {
             throw new IllegalArgumentException("Listing is not available for purchase");
         }
 
-        // Check if listing already has an active order
         List<Order> existingOrders = orderRepository.findByListing(listing);
         if (!existingOrders.isEmpty() && "PAID".equals(paymentStatus)) {
             throw new IllegalArgumentException("This listing has already been booked/sold");
         }
 
-        // Update listing status based on type
         if (listing.getType() == Listing.ListingType.RENT) {
             validateRentDates(rentStartDate, rentEndDate);
             listing.setStatus(Listing.ListingStatus.BOOKED);
         } else {
-            // SALE type
             listing.setStatus(Listing.ListingStatus.SOLD);
         }
 
-        // Create and save the order
         Order order = new Order();
         order.setBuyer(buyer);
         order.setListing(listing);
@@ -85,37 +71,23 @@ public class OrderService {
         return saved;
     }
 
-    /**
-     * Get all orders for a buyer
-     */
     public List<Order> getOrdersByBuyer(Long buyerId) {
         User buyer = userRepository.findById(buyerId)
                 .orElseThrow(() -> new IllegalArgumentException("Buyer not found"));
         return orderRepository.findByBuyer(buyer);
     }
 
-    /**
-     * Get orders for a specific listing (check if already booked/sold)
-     */
     public List<Order> getOrdersByListing(Long listingId) {
         Listing listing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new IllegalArgumentException("Listing not found"));
         return orderRepository.findByListing(listing);
     }
 
-    /**
-     * Get a specific order by ID
-     */
     public Order getOrderById(Long orderId) {
         return orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found"));
     }
 
-    /**
-     * Calculate total amount for an order
-     * For SALE: amount = listing.salePrice
-     * For RENT: amount = listing.rentPricePerDay * numberOfDays
-     */
     public BigDecimal calculateAmount(Listing listing, LocalDate rentStartDate, LocalDate rentEndDate) {
         if (listing.getType() == Listing.ListingType.SALE) {
             if (listing.getSalePrice() == null) {
@@ -139,9 +111,6 @@ public class OrderService {
         return totalPrice;
     }
 
-    /**
-     * Validate rent dates
-     */
     private void validateRentDates(LocalDate start, LocalDate end) {
         if (start == null || end == null) {
             throw new IllegalArgumentException("Rental dates are required for rent listings");
@@ -154,9 +123,6 @@ public class OrderService {
         }
     }
 
-    /**
-     * Check if a listing is already booked/sold
-     */
     public boolean isListingAvailable(Long listingId) {
         Listing listing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new IllegalArgumentException("Listing not found"));

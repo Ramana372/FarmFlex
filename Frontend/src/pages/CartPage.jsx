@@ -90,12 +90,10 @@ export default function CartPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Cart Items */}
             <div className="lg:col-span-2 space-y-4">
               {cartItems.map(item => (
                 <div key={item.id} className="bg-white rounded-lg shadow p-6 border border-gray-100 hover:shadow-lg transition">
                   <div className="flex gap-6">
-                    {/* Item Image */}
                     <div className="w-24 h-24 bg-gray-200 rounded-lg flex-shrink-0 overflow-hidden">
                       {item.imageUrls?.length ? (
                         <img
@@ -109,7 +107,6 @@ export default function CartPage() {
                       )}
                     </div>
 
-                    {/* Item Details */}
                     <div className="flex-1">
                       <Link to={`/listings/${item.id}`} className="text-xl font-bold text-gray-900 hover:text-blue-600">
                         {item.title}
@@ -125,7 +122,6 @@ export default function CartPage() {
                         </span>
                       </div>
 
-                      {/* Quantity Control */}
                       <div className="flex items-center gap-4 mt-4">
                         <div className="flex items-center border border-gray-300 rounded-lg">
                           <button
@@ -160,7 +156,6 @@ export default function CartPage() {
               ))}
             </div>
 
-            {/* Cart Summary */}
             <div className="lg:col-span-1">
               <div className="bg-white rounded-lg shadow p-6 border border-gray-100 sticky top-24">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">Order Summary</h2>
@@ -211,7 +206,6 @@ export default function CartPage() {
         )}
       </div>
 
-      {/* Checkout Modal */}
       {showCheckout && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 space-y-6">

@@ -64,7 +64,6 @@ export default function AdminApprovalsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Navigation */}
       <nav className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
@@ -93,7 +92,6 @@ export default function AdminApprovalsPage() {
         </div>
       </nav>
 
-      {/* Main Content */}
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl font-bold text-gray-800 mb-8">Pending Listing Approvals</h2>
 
@@ -139,7 +137,6 @@ export default function AdminApprovalsPage() {
                         </div>
                       </div>
 
-                      {/* Seller Info */}
                       <div className="mt-4 p-3 bg-blue-50 rounded">
                         <p className="text-sm text-gray-700">
                           <span className="font-bold">Owner:</span> {listing.owner?.name}
@@ -150,7 +147,6 @@ export default function AdminApprovalsPage() {
                       </div>
                     </div>
 
-                    {/* Action Buttons */}
                     <div className="flex flex-col justify-between">
                       <button
                         onClick={() => handleApprove(listing.id)}

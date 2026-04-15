@@ -9,11 +9,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-
-/**
- * OrderController - Order management endpoints
- * Users can view their order history (bookings and purchases)
- */
 @RestController
 @RequestMapping("/api/orders")
 @RequiredArgsConstructor
@@ -23,9 +18,6 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    /**
-     * Get all orders (bookings/purchases) for the current user
-     */
     @GetMapping("/my")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> getMyOrders(@RequestAttribute("userId") Long userId) {
@@ -43,10 +35,6 @@ public class OrderController {
         }
     }
 
-    /**
-     * Get order details by ID
-     * User can only view their own orders
-     */
     @GetMapping("/{orderId}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> getOrderDetails(
@@ -54,8 +42,6 @@ public class OrderController {
             @RequestAttribute("userId") Long userId) {
         try {
             var order = orderService.getOrderById(orderId);
-            
-            // Check if user is the buyer
             if (!order.getBuyer().getId().equals(userId)) {
                 log.warn("User {} attempted to access order {} belonging to user {}", 
                         userId, orderId, order.getBuyer().getId());
@@ -75,9 +61,6 @@ public class OrderController {
         }
     }
 
-    /**
-     * Check if a listing is available for booking/purchase
-     */
     @GetMapping("/listing/{listingId}/available")
     public ResponseEntity<?> checkListingAvailability(@PathVariable Long listingId) {
         try {

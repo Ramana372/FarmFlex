@@ -14,10 +14,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-/**
- * PaymentService - Razorpay payment integration
- * Handles payment order creation and signature verification
- */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -32,34 +28,25 @@ public class PaymentService {
     private final ListingRepository listingRepository;
     private final OrderService orderService;
 
-    /**
-     * Create a Razorpay order for a listing
-     * Calculates amount based on listing type (RENT or SALE)
-     * Returns JSONObject with order details
-     */
     public JSONObject createRazorpayOrder(Long listingId, LocalDate rentStartDate, LocalDate rentEndDate) {
         Listing listing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new IllegalArgumentException("Listing not found"));
 
-        // Check if listing is available for purchase
         if (listing.getStatus() != Listing.ListingStatus.LIVE) {
             throw new IllegalArgumentException("Listing is not available for purchase");
         }
 
-        // Calculate the amount to be charged
         BigDecimal amount = orderService.calculateAmount(listing, rentStartDate, rentEndDate);
 
         try {
             RazorpayClient razorpayClient = new RazorpayClient(keyId, keySecret);
             JSONObject orderRequest = new JSONObject();
-            // Razorpay expects amount in smallest currency unit (paise for INR)
             orderRequest.put("amount", amount.multiply(BigDecimal.valueOf(100)).longValue());
             orderRequest.put("currency", "INR");
             orderRequest.put("receipt", "listing_" + listingId + "_" + System.currentTimeMillis());
             
             Order razorpayOrder = razorpayClient.orders.create(orderRequest);
             
-            // Convert Order to JSONObject for consistent return type
             JSONObject response = new JSONObject();
             response.put("id", razorpayOrder.get("id").toString());
             response.put("amount", razorpayOrder.get("amount").toString());
@@ -74,10 +61,6 @@ public class PaymentService {
         }
     }
 
-    /**
-     * Verify Razorpay payment signature
-     * Signature is created as: SHA256(orderId|paymentId, keySecret)
-     */
     public boolean verifySignature(String orderId, String paymentId, String signature) {
         try {
             String payload = orderId + "|" + paymentId;

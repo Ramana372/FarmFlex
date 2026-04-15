@@ -13,9 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * UserController - User management endpoints
- */
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
@@ -24,10 +21,6 @@ import java.util.Map;
 public class UserController {
     
     private final UserRepo userRepository;
-
-    /**
-     * Get user profile (protected)
-     */
     @GetMapping("/{userId}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> getUserProfile(@PathVariable Long userId) {
@@ -52,9 +45,6 @@ public class UserController {
         }
     }
 
-    /**
-     * Get all farmers (admin only)
-     */
     @GetMapping("/role/farmer")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getAllFarmers() {

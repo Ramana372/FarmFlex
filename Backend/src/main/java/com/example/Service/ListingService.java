@@ -25,11 +25,6 @@ public class ListingService {
 
     private final ListingRepository listingRepository;
     private final UserRepo userRepository;
-
-    /**
-     * Create a new listing for a farmer
-     * Status starts as PENDING, awaiting admin approval
-     */
     public Listing createListing(Long farmerId,
                                  String title,
                                  String description,
@@ -64,21 +59,21 @@ public class ListingService {
         log.info("Listing created by farmer {}: {}", farmerId, saved.getId());
         return saved;
     }
-
-    /**
-     * Get all live (approved) listings for public marketplace
-     */
+    
+    @Transactional
     public List<Listing> getLiveListings() {
         // Get all publicly available listings (either APPROVED or LIVE status)
         List<Listing> listings = new ArrayList<>();
         listings.addAll(listingRepository.findByStatus(Listing.ListingStatus.APPROVED));
         listings.addAll(listingRepository.findByStatus(Listing.ListingStatus.LIVE));
+        // Ensure images are loaded within transaction
+        listings.forEach(listing -> {
+            if (listing.getImages() != null) {
+                listing.getImages().size();
+            }
+        });
         return listings;
     }
-
-    /**
-     * Get a specific live listing by ID
-     */
     public Optional<Listing> getLiveListingById(Long listingId) {
         // Check for both APPROVED and LIVE statuses
         Optional<Listing> listing = listingRepository.findByIdAndStatus(listingId, Listing.ListingStatus.LIVE);
@@ -87,19 +82,19 @@ public class ListingService {
         }
         return listing;
     }
-
-    /**
-     * Get all listings owned by a farmer (regardless of status)
-     */
+    @Transactional
     public List<Listing> getMyListings(Long farmerId) {
         User farmer = userRepository.findById(farmerId)
                 .orElseThrow(() -> new IllegalArgumentException("Farmer not found"));
-        return listingRepository.findByOwner(farmer);
+        List<Listing> listings = listingRepository.findByOwner(farmer);
+        // Explicitly load images for each listing to avoid lazy loading issues
+        listings.forEach(listing -> {
+            if (listing.getImages() != null) {
+                listing.getImages().size(); // Trigger lazy loading
+            }
+        });
+        return listings;
     }
-
-    /**
-     * Get farmer's listings grouped by status (PENDING, LIVE, REJECTED, SOLD, BOOKED)
-     */
     public Map<Listing.ListingStatus, List<Listing>> getMyListingsGrouped(Long farmerId) {
         List<Listing> listings = getMyListings(farmerId);
         Map<Listing.ListingStatus, List<Listing>> grouped = new EnumMap<>(Listing.ListingStatus.class);
@@ -111,8 +106,16 @@ public class ListingService {
     }
 
     /**
-     * Search and filter live listings by type, category, location, price, and keywords
+     * Get all live listings with images for public showcase
+     * This method ensures all images are loaded and available
      */
+    @Transactional
+    public List<Listing> getAllLiveListings() {
+        List<Listing> listings = getLiveListings();
+        return listings;
+    }
+
+    @Transactional
     public List<Listing> searchListings(String type,
                                         String category,
                                         String location,
@@ -120,6 +123,13 @@ public class ListingService {
                                         BigDecimal maxPrice,
                                         String search) {
         List<Listing> listings = getLiveListings();
+
+        // Trigger lazy loading of images before returning
+        listings.forEach(listing -> {
+            if (listing.getImages() != null) {
+                listing.getImages().size();
+            }
+        });
 
         return listings.stream()
                 .filter(l -> type == null || type.isBlank() || l.getType().name().equalsIgnoreCase(type))
@@ -131,17 +141,9 @@ public class ListingService {
                     (l.getDescription() != null && l.getDescription().toLowerCase().contains(search.toLowerCase())))
                 .collect(Collectors.toList());
     }
-
-    /**
-     * Get all pending listings awaiting admin approval
-     */
     public List<Listing> getPendingApprovals() {
         return listingRepository.findByStatus(Listing.ListingStatus.PENDING);
     }
-
-    /**
-     * Approve a pending listing (admin only) - changes status to LIVE
-     */
     public Listing approveListing(Long listingId, Long adminId) {
         User admin = userRepository.findById(adminId)
                 .orElseThrow(() -> new IllegalArgumentException("Admin not found"));
@@ -165,9 +167,6 @@ public class ListingService {
         return saved;
     }
 
-    /**
-     * Reject a pending listing (admin only) - changes status to REJECTED with reason
-     */
     public Listing rejectListing(Long listingId, Long adminId, String rejectionReason) {
         User admin = userRepository.findById(adminId)
                 .orElseThrow(() -> new IllegalArgumentException("Admin not found"));
@@ -191,16 +190,10 @@ public class ListingService {
         return saved;
     }
 
-    /**
-     * Get a listing by ID (includes non-live listings - for farmer and admin)
-     */
     public Optional<Listing> getListingById(Long listingId) {
         return listingRepository.findById(listingId);
     }
 
-    /**
-     * Update listing details (farmer can edit pending listings)
-     */
     public Listing updateListing(Long listingId, Long farmerId, Listing.ListingCategory category,
                                  String title, String description, BigDecimal salePrice,
                                  BigDecimal rentPricePerDay, String location, List<String> imageUrls) {
@@ -236,9 +229,6 @@ public class ListingService {
         return saved;
     }
 
-    /**
-     * Delete a listing (farmer can only delete PENDING or REJECTED listings)
-     */
     public void deleteListing(Long listingId, Long farmerId) {
         Listing listing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new IllegalArgumentException("Listing not found"));
@@ -255,9 +245,6 @@ public class ListingService {
         log.info("Listing {} deleted by farmer {}", listingId, farmerId);
     }
 
-    /**
-     * Validate listing prices based on type
-     */
     private void validateListingPrices(Listing.ListingType type, BigDecimal salePrice, BigDecimal rentPricePerDay) {
         if (type == Listing.ListingType.SALE) {
             if (salePrice == null || salePrice.compareTo(BigDecimal.ZERO) <= 0) {
@@ -271,9 +258,6 @@ public class ListingService {
         }
     }
 
-    /**
-     * Check if a price matches the price range filter
-     */
     private boolean matchesPrice(Listing listing, BigDecimal minPrice, BigDecimal maxPrice) {
         BigDecimal price = listing.getType() == Listing.ListingType.SALE
                 ? listing.getSalePrice()

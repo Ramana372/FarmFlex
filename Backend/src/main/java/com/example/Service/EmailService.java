@@ -31,9 +31,6 @@ public class EmailService {
     private static final DateTimeFormatter DATE_FORMATTER = 
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    /**
-     * Send email verification link
-     */
     public void sendVerificationEmail(String toEmail, String username, String verificationToken) {
         try {
             String verificationLink = frontendUrl + "/verify-email?token=" + verificationToken;
@@ -57,9 +54,6 @@ public class EmailService {
         }
     }
 
-    /**
-     * Send welcome email after successful verification
-     */
     public void sendWelcomeEmail(String toEmail, String username, String role) {
         try {
             String dashboardLink = frontendUrl + "/dashboard";
@@ -82,9 +76,6 @@ public class EmailService {
         }
     }
 
-    /**
-     * Send password reset email
-     */
     public void sendPasswordResetEmail(String toEmail, String username, String resetToken) {
         try {
             String resetLink = frontendUrl + "/reset-password?token=" + resetToken;
@@ -108,9 +99,6 @@ public class EmailService {
         }
     }
 
-    /**
-     * Send order confirmation email to buyer
-     */
     public void sendOrderConfirmationEmail(String toEmail, String buyerName, String equipmentTitle, 
                                            String orderId, String amount, String type, String dates) {
         try {
@@ -138,9 +126,6 @@ public class EmailService {
         }
     }
 
-    /**
-     * Send order notification email to farmer/seller
-     */
     public void sendFarmerNotificationEmail(String toEmail, String farmerName, String equipmentTitle, 
                                             String buyerName, String buyerPhone, String type) {
         try {
@@ -165,9 +150,6 @@ public class EmailService {
         }
     }
 
-    /**
-     * Send contact form inquiry email
-     */
     public void sendContactFormEmail(String senderEmail, String senderName, String subject, String message) {
         try {
             SimpleMailMessage adminEmail = new SimpleMailMessage();
@@ -199,9 +181,6 @@ public class EmailService {
         }
     }
 
-    /**
-     * Send listing approval/rejection email to farmer
-     */
     public void sendListingStatusEmail(String toEmail, String farmerName, String equipmentTitle, 
                                        String status, String reason) {
         try {
@@ -224,16 +203,6 @@ public class EmailService {
         }
     }
 
-    /**
-     * Send login notification email asynchronously
-     * Called after successful authentication to notify user of login activity
-     * This method runs asynchronously and should NOT block the login response
-     * 
-     * @param toEmail User's email address
-     * @param userName User's full name
-     * @param ipAddress User's IP address (optional)
-     * @param userAgent User's browser/device information (optional)
-     */
     @Async("taskExecutor")
     public void sendLoginNotificationEmail(String toEmail, String userName, String ipAddress, String userAgent) {
         try {
@@ -281,15 +250,6 @@ public class EmailService {
         }
     }
 
-    /**
-     * Send suspicious login alert email
-     * Called when login is attempted from unusual location/device
-     * 
-     * @param toEmail User's email address
-     * @param userName User's full name
-     * @param ipAddress IP address of the login attempt
-     * @param reason Reason for suspicion
-     */
     @Async("taskExecutor")
     public void sendSuspiciousLoginAlert(String toEmail, String userName, String ipAddress, String reason) {
         try {
@@ -325,12 +285,6 @@ public class EmailService {
         }
     }
 
-    /**
-     * Send password changed confirmation email
-     * 
-     * @param toEmail User's email address
-     * @param userName User's full name
-     */
     @Async("taskExecutor")
     public void sendPasswordChangedEmail(String toEmail, String userName) {
         try {

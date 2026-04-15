@@ -1,13 +1,15 @@
 package com.example.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @Entity
@@ -39,10 +41,35 @@ public class Listing {
 
     private String location;
 
-    @ElementCollection
-    @CollectionTable(name = "listing_images", joinColumns = @JoinColumn(name = "listing_id"))
-    @Column(name = "image_url")
-    private List<String> imageUrls = new ArrayList<>();
+    @OneToMany(mappedBy = "listing", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("listing")
+    private List<ListingImage> images = new ArrayList<>();
+
+    // Helper method to get image URLs for JSON serialization
+    public List<String> getImageUrls() {
+        if (images == null || images.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return images.stream()
+                .map(ListingImage::getImageUrl)
+                .collect(Collectors.toList());
+    }
+
+    // Helper method to set image URLs
+    public void setImageUrls(List<String> imageUrls) {
+        if (imageUrls == null || imageUrls.isEmpty()) {
+            this.images = new ArrayList<>();
+            return;
+        }
+        this.images = imageUrls.stream()
+                .map(url -> {
+                    ListingImage img = new ListingImage();
+                    img.setImageUrl(url);
+                    img.setListing(this);
+                    return img;
+                })
+                .collect(Collectors.toList());
+    }
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "owner_id")
@@ -72,6 +99,11 @@ public class Listing {
         SEEDER,
         SPRAYER,
         THRESHER,
+        GRAINS,
+        VEGETABLES,
+        SEEDS,
+        LIVESTOCK,
+        EQUIPMENT,
         OTHER
     }
 

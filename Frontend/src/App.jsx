@@ -3,8 +3,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import ProtectedRoute from './components/ProtectedRoute';
-
-// Pages
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -18,8 +16,6 @@ import MarketplacePage from './pages/BrowseProductsPage';
 import ListingDetailsPage from './pages/ListingDetailsPage';
 import CartPage from './pages/CartPage';
 import MyOrdersPage from './pages/MyOrdersPage';
-
-// Styles
 import './index.css';
 
 function App() {
@@ -28,7 +24,6 @@ function App() {
       <AuthProvider>
         <CartProvider>
           <Routes>
-            {/* Public Routes */}
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
@@ -38,7 +33,6 @@ function App() {
             <Route path="/listings/:id" element={<ListingDetailsPage />} />
             <Route path="/cart" element={<CartPage />} />
 
-            {/* Protected Routes - All Users */}
             <Route
               path="/dashboard"
               element={
@@ -57,7 +51,7 @@ function App() {
               }
             />
 
-            {/* Admin Routes */}
+
             <Route
               path="/admin/dashboard"
               element={
@@ -76,7 +70,7 @@ function App() {
               }
             />
 
-            {/* Farmer Routes */}
+
             <Route
               path="/farmer/dashboard"
               element={
@@ -104,14 +98,13 @@ function App() {
               }
             />
 
-            {/* Default Route */}
+
             <Route path="/dashboard" element={
               <ProtectedRoute>
                 <DashboardPage />
               </ProtectedRoute>
             } />
 
-            {/* 404 */}
             <Route
               path="*"
               element={

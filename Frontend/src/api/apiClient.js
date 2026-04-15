@@ -18,14 +18,12 @@ apiClient.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
-  // Don't override Content-Type for FormData (allows multipart/form-data)
   if (config.data instanceof FormData) {
     delete config.headers['Content-Type'];
   }
   return config;
 });
 
-// Handle 401 responses
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {

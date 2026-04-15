@@ -19,9 +19,6 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final UserRepo userRepository;
 
-    /**
-     * Farmer creates a new product listing (requires admin approval)
-     */
     public Product createProduct(Long farmerId, String productName, String description, 
                                   String category, String condition, Double price, 
                                   Integer quantity, String location, String contactPhone) {
@@ -50,16 +47,10 @@ public class ProductService {
         return savedProduct;
     }
 
-    /**
-     * Get all approved products (visible to buyers)
-     */
     public List<Product> getApprovedProducts() {
         return productRepository.findByApprovalStatus(Product.ApprovalStatus.APPROVED);
     }
 
-    /**
-     * Get products by category
-     */
     public List<Product> getProductsByCategory(String category) {
         return productRepository.findByCategory(category);
     }
@@ -67,8 +58,10 @@ public class ProductService {
     /**
      * Get specific approved product
      */
-    public Optional<Product> getProductById(Long id) {
-        return productRepository.findByIdAndApprovalStatus(id, Product.ApprovalStatus.APPROVED);
+    public Product getApprovedProductById(Long productId) {
+        return productRepository.findById(productId)
+                .filter(p -> p.getApprovalStatus().equals(Product.ApprovalStatus.APPROVED))
+                .orElseThrow(() -> new IllegalArgumentException("Product not found or not approved"));
     }
 
     /**
@@ -83,7 +76,7 @@ public class ProductService {
     /**
      * Get pending products for admin approval
      */
-    public List<Product> getPendingApprovals() {
+    public List<Product> getPendingProducts() {
         return productRepository.findByApprovalStatus(Product.ApprovalStatus.PENDING);
     }
 
@@ -93,7 +86,6 @@ public class ProductService {
     public Product approveProduct(Long productId, Long adminId) {
         User admin = userRepository.findById(adminId)
                 .orElseThrow(() -> new IllegalArgumentException("Admin not found"));
-
         if (!admin.getRole().equals(User.UserRole.ADMIN)) {
             throw new IllegalArgumentException("Only admins can approve products");
         }

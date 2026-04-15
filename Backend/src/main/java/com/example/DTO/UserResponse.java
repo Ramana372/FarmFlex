@@ -1,8 +1,5 @@
 package com.example.DTO;
 
-/**
- * DTO for user responses (safe, no sensitive data)
- */
 public class UserResponse {
 
     private Long id;

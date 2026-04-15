@@ -20,11 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.Map;
-
-/**
- * PaymentController - UPI payment endpoints
- * Handles order creation and payment confirmation for RENT and SALE listings
- */
 @RestController
 @RequestMapping("/api/payments")
 @RequiredArgsConstructor
@@ -38,32 +33,21 @@ public class PaymentController {
     private final UserRepo userRepository;
     private final EmailService emailService;
 
-    /**
-     * Create a Razorpay order for a listing
-     * For RENT: requires rentStartDate and rentEndDate
-     * For SALE: amount = salePrice
-     */
     @PostMapping("/create-order")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> createOrder(@RequestBody PaymentCreateOrderRequest request) {
         try {
-            // Get the listing
             Listing listing = listingRepository.findById(request.getListingId())
                     .orElseThrow(() -> new IllegalArgumentException("Listing not found"));
 
-            // Check if listing is available for purchase
             if (listing.getStatus() != Listing.ListingStatus.LIVE) {
                 return ResponseEntity.badRequest().body(Map.of("error", "This listing is not available for purchase"));
             }
-
-            // Create Razorpay order
             JSONObject razorpayOrder = paymentService.createRazorpayOrder(
                     request.getListingId(),
                     request.getRentStartDate(),
                     request.getRentEndDate()
             );
-
-            // Calculate final amount
             BigDecimal amount = orderService.calculateAmount(listing, request.getRentStartDate(), request.getRentEndDate());
 
             log.info("Created Razorpay order {} for listing {}", razorpayOrder.get("id"), request.getListingId());
@@ -88,20 +72,13 @@ public class PaymentController {
         }
     }
 
-    /**
-     * Confirm payment after successful UPI/Bank transaction
-     * For UPI payments, signature can be 'upi_verified'
-     */
     @PostMapping("/confirm")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> confirmPayment(
             @RequestAttribute("userId") Long userId,
             @RequestBody PaymentConfirmRequest request) {
         try {
-            // For UPI payments, signature is 'upi_verified'
             boolean isUPIPayment = "upi_verified".equals(request.getSignature());
-            
-            // Verify payment (skip Razorpay verification for UPI)
             boolean verified = isUPIPayment || paymentService.verifySignature(
                     request.getOrderId(),
                     request.getPaymentId(),
@@ -114,14 +91,9 @@ public class PaymentController {
                         .body(Map.of("error", "Payment verification failed"));
             }
 
-            // Get the listing
             Listing listing = listingRepository.findById(request.getListingId())
                     .orElseThrow(() -> new IllegalArgumentException("Listing not found"));
-
-            // Calculate amount
             BigDecimal amount = orderService.calculateAmount(listing, request.getRentStartDate(), request.getRentEndDate());
-
-            // Create order in database
             Order order = orderService.createOrder(
                     userId,
                     request.getListingId(),
@@ -153,7 +125,7 @@ public class PaymentController {
                 );
             }
 
-            // Send notification email to seller
+
             if (seller != null && buyer != null) {
                 String typeString = listing.getType().toString();
                 emailService.sendFarmerNotificationEmail(

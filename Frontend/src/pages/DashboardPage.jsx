@@ -21,7 +21,6 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Navigation */}
       <nav className="bg-gradient-to-r from-green-600 to-green-700 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
@@ -47,7 +46,6 @@ export default function DashboardPage() {
         </div>
       </nav>
 
-      {/* Main Content */}
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100 mb-8">
@@ -143,7 +141,6 @@ export default function DashboardPage() {
             )}
           </div>
 
-          {/* User Info */}
           <div className="mt-12 p-6 bg-gray-100 rounded-lg">
             <h3 className="text-lg font-bold text-gray-800 mb-4">Profile Information</h3>
             <div className="grid grid-cols-2 gap-4">

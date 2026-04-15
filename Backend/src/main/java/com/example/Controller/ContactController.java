@@ -7,10 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-
-/**
- * ContactController - Handles contact form submissions and inquiries
- */
 @RestController
 @RequestMapping("/api/contact")
 @RequiredArgsConstructor
@@ -20,21 +16,15 @@ public class ContactController {
 
     private final EmailService emailService;
 
-    /**
-     * Submit contact form
-     */
     @PostMapping("/send-message")
     public ResponseEntity<?> sendContactMessage(@RequestBody ContactRequest request) {
         try {
-            // Validate input
             if (request.getEmail() == null || request.getEmail().isEmpty() ||
                 request.getName() == null || request.getName().isEmpty() ||
                 request.getMessage() == null || request.getMessage().isEmpty()) {
                 return ResponseEntity.badRequest()
                         .body(Map.of("error", "Name, email, and message are required"));
             }
-
-            // Send contact form emails
             emailService.sendContactFormEmail(
                     request.getEmail(),
                     request.getName(),
@@ -54,9 +44,6 @@ public class ContactController {
         }
     }
 
-    /**
-     * Send equipment inquiry email
-     */
     @PostMapping("/inquiry")
     public ResponseEntity<?> sendEquipmentInquiry(@RequestBody EquipmentInquiry inquiry) {
         try {
